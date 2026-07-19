@@ -1,0 +1,13 @@
+task,protocol,model,n_seeds,metric,mean,sd,ci95_low,ci95_high,notes
+synchronous,fixed word-aligned headline test,L3,1,accuracy,0.7708,,,,upstream and head seed 4; n_test=445
+synchronous,fixed word-aligned headline test,L4,1,accuracy,0.7618,,,,upstream and head seed 4; n_test=445
+synchronous,fixed word-aligned headline test,L5,1,accuracy,0.7393,,,,upstream and head seed 4; n_test=445
+synchronous,fixed word-aligned headline test,L3+L4+L5,1,accuracy,0.8135,,,,upstream and head seed 4; n_test=445
+asynchronous,validation-selected operating threshold,L3,5,F1,0.4539916,0.0096944,0.4419564,0.4660268,head seeds conditional on frozen upstream seed 4
+asynchronous,validation-selected operating threshold,L4,5,F1,0.4601749,0.0130181,0.4440134,0.4763364,head seeds conditional on frozen upstream seed 4
+asynchronous,validation-selected operating threshold,L5,5,F1,0.4311888,0.0127147,0.4154039,0.4469736,head seeds conditional on frozen upstream seed 4
+asynchronous,validation-selected operating threshold,L3+L4+L5,5,F1,0.5058751,0.0102219,0.4931850,0.5185652,head seeds conditional on frozen upstream seed 4
+asynchronous,test PR curve near recall 0.40,L3,5,F1,0.4474,0.0049,,,descriptive test-curve slice; not a deployment threshold
+asynchronous,test PR curve near recall 0.40,L4,5,F1,0.4617,0.0076,,,descriptive test-curve slice; not a deployment threshold
+asynchronous,test PR curve near recall 0.40,L5,5,F1,0.4293,0.0147,,,descriptive test-curve slice; not a deployment threshold
+asynchronous,test PR curve near recall 0.40,L3+L4+L5,5,F1,0.4910,0.0044,0.4856,0.4964,descriptive test-curve slice; not a deployment threshold

@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "updated": "2026-07-19",
+  "scope": "Curated metrics for the public research-code snapshot; no participant data are included.",
+  "metric_units": {
+    "accuracy": "fraction",
+    "precision": "fraction",
+    "recall": "fraction",
+    "f1": "fraction",
+    "pr_auc": "dimensionless; trapezoidal area under the upper precision envelope over the achieved recall range (not sklearn average_precision)",
+    "false_positives_per_minute": "events/min",
+    "latency_median_ms": "ms"
+  },
+  "synchronous": {
+    "protocol": "Fixed word-aligned headline test surface",
+    "participant_alias": "ivanova",
+    "upstream_seed": 4,
+    "head_seed": 4,
+    "test_n": 445,
+    "test_words": 430,
+    "test_silence": 15,
+    "chance_accuracy": 0.037,
+    "single_seed_accuracy": {
+      "L3": 0.7708,
+      "L4": 0.7618,
+      "L5": 0.7393,
+      "L3+L4+L5": 0.8135
+    },
+    "ensemble_delta_vs_best_single": 0.0427,
+    "ensemble_delta_vs_l4": 0.0517
+  },
+  "asynchronous": {
+    "continuous_head_multiseed": {
+      "protocol": "Offline noncausal continuous-head training; class-aware operating threshold selected only on validation",
+      "event_definition": "At each endpoint the head predicts 27 classes (silence plus 26 words); a true-positive event requires the correct non-silence word class within the temporal matching interval/tolerance.",
+      "causality_note": "Boundary cues are absent, but zero-phase filtering/decimation, whole-file scaling and centered smoothing use future context; this is not a strict real-time causal estimate.",
+      "conditioning": "Five head seeds conditional on frozen synchronous upstream seed 4",
+      "n_head_seeds": 5,
+      "head_seeds": [1, 2, 3, 4, 42],
+      "primary_ensemble": "L3+L4+L5",
+      "per_seed_ensemble_console_values": [
+        {"seed": 1, "precision": 0.530, "recall": 0.495, "f1": 0.512, "pr_auc": 0.438, "false_positives_per_minute": 17.13, "threshold": 0.350},
+        {"seed": 2, "precision": 0.473, "recall": 0.540, "f1": 0.504, "pr_auc": 0.435, "false_positives_per_minute": 23.39, "threshold": 0.290},
+        {"seed": 3, "precision": 0.505, "recall": 0.505, "f1": 0.505, "pr_auc": 0.416, "false_positives_per_minute": 19.31, "threshold": 0.330},
+        {"seed": 4, "precision": 0.548, "recall": 0.491, "f1": 0.518, "pr_auc": 0.435, "false_positives_per_minute": 15.77, "threshold": 0.340},
+        {"seed": 42, "precision": 0.469, "recall": 0.514, "f1": 0.491, "pr_auc": 0.410, "false_positives_per_minute": 22.66, "threshold": 0.305}
+      ],
+      "ensemble_summary": {
+        "precision_mean": 0.5050475,
+        "recall_mean": 0.5088372,
+        "f1_mean": 0.5058751,
+        "f1_sd": 0.0102219,
+        "f1_sem": 0.0046,
+        "f1_95_t_ci": [0.4931850, 0.5185652],
+        "pr_auc_mean": 0.4269763,
+        "pr_auc_sd": 0.0127257,
+        "pr_auc_95_t_ci": [0.4111779, 0.4427748],
+        "false_positives_per_minute_mean": 19.6523,
+        "false_positives_per_minute_sd": 3.3364,
+        "latency_median_ms_mean": 167.1143,
+        "latency_median_ms_sd": 6.8805,
+        "latency_median_ms_95_t_ci": [158.5724, 175.6561]
+      },
+      "f1_by_model": {
+        "L3": {"mean": 0.4539916, "sd": 0.0096944, "ci95": [0.4419564, 0.4660268]},
+        "L4": {"mean": 0.4601749, "sd": 0.0130181, "ci95": [0.4440134, 0.4763364]},
+        "L5": {"mean": 0.4311888, "sd": 0.0127147, "ci95": [0.4154039, 0.4469736]},
+        "L3+L4+L5": {"mean": 0.5058751, "sd": 0.0102219, "ci95": [0.4931850, 0.5185652]}
+      }
+    },
+    "recall_approximately_0_40": {
+      "protocol": "Descriptive slice of each test PR curve at recall nearest 0.40",
+      "caveat": "The point is selected using test labels and is not a deployment operating point. Use the validation-selected threshold result above as the primary estimate.",
+      "n_head_seeds": 5,
+      "by_model": {
+        "L3": {"precision_mean": 0.5061, "precision_sd": 0.0122, "recall_mean": 0.4009, "recall_sd": 0.0021, "f1_mean": 0.4474, "f1_sd": 0.0049},
+        "L4": {"precision_mean": 0.5436, "precision_sd": 0.0196, "recall_mean": 0.4014, "recall_sd": 0.0021, "f1_mean": 0.4617, "f1_sd": 0.0076},
+        "L5": {"precision_mean": 0.4613, "precision_sd": 0.0344, "recall_mean": 0.4023, "recall_sd": 0.0016, "f1_mean": 0.4293, "f1_sd": 0.0147},
+        "L3+L4+L5": {"precision_mean": 0.6380, "precision_sd": 0.0097, "recall_mean": 0.3991, "recall_sd": 0.0027, "f1_mean": 0.4910, "f1_sd": 0.0044, "f1_95_t_ci": [0.4856, 0.4964], "false_positives_per_minute_mean": 8.83, "false_positives_per_minute_sd": 0.34, "latency_median_ms_mean": 167.9, "latency_median_ms_sd": 5.6, "full_curve_pr_auc_mean": 0.4270, "full_curve_pr_auc_sd": 0.0127}
+      }
+    },
+    "frozen_synchronous_replay_seed4": {
+      "protocol": "Frozen synchronous decoder replayed on overlapping continuous windows",
+      "precision": 0.1247059,
+      "recall": 0.1232558,
+      "f1": 0.1239766,
+      "false_positives_per_minute": 33.7208,
+      "latency_median_ms": 428.955,
+      "note": "Single reconstructed replay run; no confidence interval."
+    }
+  },
+  "figures": {
+    "synchronous_seed4": "sync/sync_l345_seed4.png",
+    "asynchronous_f1_ci": "async/figures/async_f1_ci.png",
+    "asynchronous_pr_curves": "async/figures/paper_style_async_pr_multiseed.png"
+  }
+}

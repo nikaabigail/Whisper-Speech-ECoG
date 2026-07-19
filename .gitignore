@@ -1,0 +1,90 @@
+# This repository publishes source code and curated result figures only.
+# Raw recordings, derived arrays, caches, logs, and model weights must stay local.
+
+# Python / tooling
+__pycache__/
+*.py[cod]
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+
+# Local editor and operating-system files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Secrets and machine-specific configuration
+.env
+.env.*
+!.env.example
+**/patients.json
+!**/patients.example.json
+
+# Raw or derived research data (never publish)
+data/
+dataset/
+datasets/
+**/data/
+**/dataset/
+**/datasets/
+*.h5
+*.hdf5
+*.mat
+*.edf
+*.bdf
+*.fif
+*.vhdr
+*.vmrk
+*.eeg
+*.set
+*.wav
+*.flac
+*.TextGrid
+*_words.txt
+*.npy
+*.npz
+*.pkl
+*.pickle
+
+# Generated runs, caches, and logs
+artifacts/
+cache/
+caches/
+logs/
+runs/
+model_dumps/
+whisper_cache/
+**/artifacts/
+**/cache/
+**/caches/
+**/logs/
+**/runs/
+**/model_dumps/
+**/whisper_cache/
+*.log
+*.partial
+
+# Runtime JSON/checkpoint outputs from the executable stages.  The curated
+# top-level results/ directory remains tracked.
+02_whisper_sync/results/
+03_whisper_ensemble/results/
+04_whisper_async/results/
+
+# Checkpoints are documented but not bundled.
+checkpoints/*
+!checkpoints/README.md
+!checkpoints/release_manifest.json
+*.pth
+*.pt
+*.ckpt
+*.safetensors
+
+# Upstream MEL code is fetched at a pinned commit and remains a separate checkout.
+01_mel_baseline/upstream/

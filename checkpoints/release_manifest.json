@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "kind": "unbundled_frozen_seed4_checkpoint_manifest",
+  "description": "Exact upstream L3/L4/L5 files used by the reported experiments. They are documented for provenance but are not distributed in this repository.",
+  "source_patient": "ivanova",
+  "source_seed": 4,
+  "bundled": false,
+  "present": false,
+  "distribution_status": "not_bundled_pending_data_consent_and_license_review",
+  "expected_archive_root": "checkpoints/frozen_seed4",
+  "files": [
+    {
+      "layer": 3,
+      "role": "ecog_to_whisper_encoder",
+      "filename": "regression___ivanova___SimpleNetBase_WithLSTM__CNANNELS_8_16__LAG_1000_0__WHISPER_BASE_L3___2026-07-16_19-33-07.pth",
+      "expected_archive_relative_path": "upstream/checkpoints/L3/regression___ivanova___SimpleNetBase_WithLSTM__CNANNELS_8_16__LAG_1000_0__WHISPER_BASE_L3___2026-07-16_19-33-07.pth",
+      "bytes": 670728,
+      "sha256": "f564acd54eac71c89f6c20e5cdfc08904bc37ba4615484acf1e09fa8d73a1f38",
+      "bundled": false,
+      "present": false
+    },
+    {
+      "layer": 3,
+      "role": "synchronous_word_head",
+      "filename": "classification_hidden___ivanova___SimpleNetBase_WithLSTM__CNANNELS_8_16__LAG_1000_0__WHISPER_BASE_L3___2026-07-16_19-33-07.pth",
+      "expected_archive_relative_path": "upstream/checkpoints/L3/classification_hidden___ivanova___SimpleNetBase_WithLSTM__CNANNELS_8_16__LAG_1000_0__WHISPER_BASE_L3___2026-07-16_19-33-07.pth",
+      "bytes": 12794314,
+      "sha256": "16df69c977cf7dc6e10944f55089c978fb1efbe28b5ddbc4850939fa6203f700",
+      "bundled": false,
+      "present": false
+    },
+    {
+      "layer": 3,
+      "role": "synchronous_result_and_split_provenance",
+      "filename": "classification_hidden___ivanova___SimpleNetBase_WithLSTM__CNANNELS_8_16__LAG_1000_0__WHISPER_BASE_L3___2026-07-16_19-33-07.json",
+      "expected_archive_relative_path": "upstream/results/L3/classification_hidden___ivanova___SimpleNetBase_WithLSTM__CNANNELS_8_16__LAG_1000_0__WHISPER_BASE_L3___2026-07-16_19-33-07.json",
+      "bytes": 1228574,
+      "sha256": "ede906ea7378e62034902de5cdeb1f8a96cc7e4f411b58df3cddeb7e1f27cc51",
+      "bundled": false,
+      "present": false
+    },
+    {
+      "layer": 4,
+      "role": "ecog_to_whisper_encoder",
+      "filename": "regression___ivanova___SimpleNetBase_WithLSTM__CNANNELS_8_16__LAG_1000_0__WHISPER_BASE_L4___2026-07-16_21-24-59.pth",
+      "expected_archive_relative_path": "upstream/checkpoints/L4/regression___ivanova___SimpleNetBase_WithLSTM__CNANNELS_8_16__LAG_1000_0__WHISPER_BASE_L4___2026-07-16_21-24-59.pth",
+      "bytes": 670728,
+      "sha256": "dfb541e6cd99e42f8ccf66752e7569d613fe95accbe913126842c94681156dc1",
+      "bundled": false,
+      "present": false
+    },
+    {
+      "layer": 4,
+      "role": "synchronous_word_head",
+      "filename": "classification_hidden___ivanova___SimpleNetBase_WithLSTM__CNANNELS_8_16__LAG_1000_0__WHISPER_BASE_L4___2026-07-16_21-24-59.pth",
+      "expected_archive_relative_path": "upstream/checkpoints/L4/classification_hidden___ivanova___SimpleNetBase_WithLSTM__CNANNELS_8_16__LAG_1000_0__WHISPER_BASE_L4___2026-07-16_21-24-59.pth",
+      "bytes": 12794314,
+      "sha256": "77ca4a53e6499e180e5351684e0d86b1abd877f7b37dcd1419ddc080cbb26c66",
+      "bundled": false,
+      "present": false
+    },
+    {
+      "layer": 4,
+      "role": "synchronous_result_and_split_provenance",
+      "filename": "classification_hidden___ivanova___SimpleNetBase_WithLSTM__CNANNELS_8_16__LAG_1000_0__WHISPER_BASE_L4___2026-07-16_21-24-59.json",
+      "expected_archive_relative_path": "upstream/results/L4/classification_hidden___ivanova___SimpleNetBase_WithLSTM__CNANNELS_8_16__LAG_1000_0__WHISPER_BASE_L4___2026-07-16_21-24-59.json",
+      "bytes": 1104803,
+      "sha256": "af50b8dd67b91a85dc896e33a06096248aa1e9ef463e13879af27389b6ce44d7",
+      "bundled": false,
+      "present": false
+    },
+    {
+      "layer": 5,
+      "role": "ecog_to_whisper_encoder",
+      "filename": "regression___ivanova___SimpleNetBase_WithLSTM__CNANNELS_8_16__LAG_1000_0__WHISPER_BASE_L5___2026-07-16_22-21-53.pth",
+      "expected_archive_relative_path": "upstream/checkpoints/L5/regression___ivanova___SimpleNetBase_WithLSTM__CNANNELS_8_16__LAG_1000_0__WHISPER_BASE_L5___2026-07-16_22-21-53.pth",
+      "bytes": 670728,
+      "sha256": "644119d986634e40f1346e47fe51a6f3a1cae32095e45596ca5ea687b1c5f379",
+      "bundled": false,
+      "present": false
+    },
+    {
+      "layer": 5,
+      "role": "synchronous_word_head",
+      "filename": "classification_hidden___ivanova___SimpleNetBase_WithLSTM__CNANNELS_8_16__LAG_1000_0__WHISPER_BASE_L5___2026-07-16_22-21-53.pth",
+      "expected_archive_relative_path": "upstream/checkpoints/L5/classification_hidden___ivanova___SimpleNetBase_WithLSTM__CNANNELS_8_16__LAG_1000_0__WHISPER_BASE_L5___2026-07-16_22-21-53.pth",
+      "bytes": 12794314,
+      "sha256": "83746e2e5c7b7ee13099e48a360d2b79d825a47771764b847d7febb1875975b8",
+      "bundled": false,
+      "present": false
+    },
+    {
+      "layer": 5,
+      "role": "synchronous_result_and_split_provenance",
+      "filename": "classification_hidden___ivanova___SimpleNetBase_WithLSTM__CNANNELS_8_16__LAG_1000_0__WHISPER_BASE_L5___2026-07-16_22-21-53.json",
+      "expected_archive_relative_path": "upstream/results/L5/classification_hidden___ivanova___SimpleNetBase_WithLSTM__CNANNELS_8_16__LAG_1000_0__WHISPER_BASE_L5___2026-07-16_22-21-53.json",
+      "bytes": 1227608,
+      "sha256": "d82f2007d971a30c2203651c203d7bc9a12b13bd84ae7e738216d74f6caee1b3",
+      "bundled": false,
+      "present": false
+    }
+  ]
+}
