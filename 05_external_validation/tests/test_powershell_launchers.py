@@ -10,4 +10,3 @@ def test_swpd_runner_avoids_fragile_inline_python_quoting() -> None:
 
     assert "whisper_ecog_ext.preflight" in source
     assert "& $Python -c" not in source
-
