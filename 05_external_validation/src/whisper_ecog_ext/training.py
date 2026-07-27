@@ -323,8 +323,11 @@ def _fit(
     device = torch.device(config.device)
     loaded_checkpoint = None
     if resume:
+        # Keep RNG byte tensors on the CPU. Loading the whole checkpoint onto
+        # CUDA turns torch_cpu into a CUDA ByteTensor, which torch.set_rng_state
+        # rejects. Model and optimizer tensors are moved explicitly below.
         loaded_checkpoint = torch.load(
-            checkpoint_path, map_location=device, weights_only=False
+            checkpoint_path, map_location="cpu", weights_only=False
         )
         if loaded_checkpoint.get("kind") != "resumable_supervised_training_checkpoint":
             raise RuntimeError("unexpected checkpoint kind")

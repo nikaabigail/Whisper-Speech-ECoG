@@ -289,6 +289,48 @@ def test_regression_resume_is_identical_and_checkpoint_is_complete(tmp_path: Pat
         )
 
 
+@pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA is required")
+def test_regression_resume_keeps_cpu_rng_state_on_cuda(tmp_path: Path) -> None:
+    train, validation = _regression_datasets()
+    config = TrainingConfig(
+        seed=23,
+        max_epochs=2,
+        batch_size=4,
+        learning_rate=3e-3,
+        patience=10,
+        device="cuda",
+    )
+    checkpoint_path = tmp_path / "cuda_resume.pt"
+    model = _small_regressor()
+    interrupted = train_regression(
+        model,
+        train,
+        validation,
+        config=config,
+        checkpoint_path=checkpoint_path,
+        run_context={"split_fingerprint": "b" * 64},
+        max_epochs_this_call=1,
+    )
+    assert interrupted.completed is False
+    resumed = train_regression(
+        model,
+        train,
+        validation,
+        config=config,
+        checkpoint_path=checkpoint_path,
+        resume=True,
+        run_context={"split_fingerprint": "b" * 64},
+    )
+    assert resumed.completed is True
+    assert resumed.epochs_completed == 2
+    checkpoint = torch.load(checkpoint_path, map_location="cpu", weights_only=False)
+    assert checkpoint["rng_state"]["torch_cpu"].device.type == "cpu"
+    assert all(
+        state.device.type == "cpu"
+        for state in checkpoint["rng_state"]["torch_cuda"]
+    )
+
+
 def test_trainer_rejects_nonfinite_targets_and_wrong_validation_role(tmp_path: Path) -> None:
     inputs = np.zeros((4, 2), dtype=np.float32)
     bad_targets = np.array([[0.0], [np.inf], [0.0], [0.0]], dtype=np.float32)
