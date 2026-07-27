@@ -34,15 +34,20 @@ $VadDir = Join-Path $RunDir 'audio_audit'
 New-Item -ItemType Directory -Path $VadDir -Force | Out-Null
 $CandidateTsv = Join-Path $VadDir 'audio_vad_candidates_unreviewed.tsv'
 
-& $Python -c 'import torch; print("Torch:", torch.__version__); print("CUDA:", torch.cuda.is_available()); print("GPU:", torch.cuda.get_device_name(0) if torch.cuda.is_available() else "none")'
-if ($LASTEXITCODE -ne 0) {
-    throw "Python/PyTorch preflight failed with exit code $LASTEXITCODE"
+$PreflightReceipt = Join-Path $RunDir 'host_preflight.json'
+$PreflightArguments = @(
+    '-B', '-m', 'whisper_ecog_ext.preflight',
+    '--dataset', 'swpd',
+    '--data-root', $DataRoot,
+    '--output-root', $RunDir,
+    '--json-out', $PreflightReceipt
+)
+if ($Device -eq 'cpu') {
+    $PreflightArguments += '--allow-cpu'
 }
-if ($Device -eq 'cuda') {
-    & $Python -c 'import sys, torch; sys.exit(0 if torch.cuda.is_available() else 1)'
-    if ($LASTEXITCODE -ne 0) {
-        throw 'CUDA was requested but is unavailable in the project Python environment.'
-    }
+& $Python @PreflightArguments
+if ($LASTEXITCODE -ne 0) {
+    throw "Python/PyTorch/CUDA preflight failed with exit code $LASTEXITCODE"
 }
 
 if (-not $NoVad) {
