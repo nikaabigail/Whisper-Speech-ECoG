@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "dataset": {
+    "name": "VocalMind: A Stereotactic EEG Dataset for Vocalized, Mimed, and Imagined Speech in Tonal Language",
+    "short_name": "VocalMind",
+    "record_id": 14696348,
+    "record_version": "v2",
+    "doi": "10.5281/zenodo.14696348",
+    "landing_page": "https://zenodo.org/records/14696348",
+    "publication_date": "2025-01-20",
+    "license": "CC-BY-4.0",
+    "source": "Zenodo REST record 14696348",
+    "official_code": "https://github.com/tianyu-h42/sEEG-Processing-SpeechDecoding",
+    "official_code_revision": "e1202bab23cc8a2c944e5e13264b2ce0a37b2d03",
+    "official_code_license": "Apache-2.0"
+  },
+  "profiles": {
+    "overt_word_raw_primary": {
+      "description": "Primary article profile: original 1000 Hz vocalized-word sEEG and simultaneous original word WAV; preprocessing must be train-fold-only.",
+      "files": [
+        "Original_Audio_Word.zip",
+        "Original_sEEG_Vocalized_Word.zip"
+      ],
+      "total_download_bytes": 224483575
+    },
+    "word_transfer_raw_optional": {
+      "description": "Raw primary profile plus original mimed- and imagined-word sEEG for secondary transfer without simultaneous target audio.",
+      "files": [
+        "Original_Audio_Word.zip",
+        "Original_sEEG_Vocalized_Word.zip",
+        "Original_sEEG_Mimed_Word.zip",
+        "Original_sEEG_Imagined_Word.zip"
+      ],
+      "total_download_bytes": 600750662
+    },
+    "overt_word_processed_fidelity": {
+      "description": "Author-processed vocalized-word sEEG and MEL with original audio; baseline fidelity and smoke checks only, not the matched primary result.",
+      "files": [
+        "Original_Audio_Word.zip",
+        "Processed_Audio_Word.zip",
+        "Processed_sEEG_Vocalized_Word.zip"
+      ],
+      "total_download_bytes": 159886795
+    },
+    "word_transfer_processed_fidelity": {
+      "description": "Processed fidelity profile plus mimed- and imagined-word sEEG; secondary smoke/fidelity analysis only.",
+      "files": [
+        "Original_Audio_Word.zip",
+        "Processed_Audio_Word.zip",
+        "Processed_sEEG_Vocalized_Word.zip",
+        "Processed_sEEG_Mimed_Word.zip",
+        "Processed_sEEG_Imagined_Word.zip"
+      ],
+      "total_download_bytes": 401279037
+    }
+  },
+  "files": [
+    {
+      "name": "Original_Audio_Word.zip",
+      "size_bytes": 34300728,
+      "md5": "504755a852fd0cb47f0f829b3da44daa",
+      "url": "https://zenodo.org/api/records/14696348/files/Original_Audio_Word.zip/content",
+      "expected_suffixes": [
+        ".wav"
+      ],
+      "role": "simultaneous overt word audio at the dataset's original sampling rate"
+    },
+    {
+      "name": "Original_sEEG_Vocalized_Word.zip",
+      "size_bytes": 190182847,
+      "md5": "1cf951dca48cea887eedf414fdd736e6",
+      "url": "https://zenodo.org/api/records/14696348/files/Original_sEEG_Vocalized_Word.zip/content",
+      "expected_suffixes": [
+        ".csv"
+      ],
+      "role": "original 1000 Hz vocalized-word sEEG for the primary fold-safe pipeline"
+    },
+    {
+      "name": "Original_sEEG_Mimed_Word.zip",
+      "size_bytes": 187595153,
+      "md5": "9dfd978d3c4595cdb5a3adb472d5bc4d",
+      "url": "https://zenodo.org/api/records/14696348/files/Original_sEEG_Mimed_Word.zip/content",
+      "expected_suffixes": [
+        ".csv"
+      ],
+      "role": "original 1000 Hz mimed-word sEEG for optional transfer analysis"
+    },
+    {
+      "name": "Original_sEEG_Imagined_Word.zip",
+      "size_bytes": 188671934,
+      "md5": "302bc108c913914cc7ab748b7e3f519c",
+      "url": "https://zenodo.org/api/records/14696348/files/Original_sEEG_Imagined_Word.zip/content",
+      "expected_suffixes": [
+        ".csv"
+      ],
+      "role": "original 1000 Hz imagined-word sEEG for optional transfer analysis"
+    },
+    {
+      "name": "Processed_Audio_Word.zip",
+      "size_bytes": 4890684,
+      "md5": "89339a2fb8e2e4725c42938108e225ae",
+      "url": "https://zenodo.org/api/records/14696348/files/Processed_Audio_Word.zip/content",
+      "expected_suffixes": [
+        ".npy"
+      ],
+      "role": "author-processed 80-bin word MEL targets for fidelity checks"
+    },
+    {
+      "name": "Processed_sEEG_Vocalized_Word.zip",
+      "size_bytes": 120695383,
+      "md5": "31ebd68a28d6af7e89f30efe527c93af",
+      "url": "https://zenodo.org/api/records/14696348/files/Processed_sEEG_Vocalized_Word.zip/content",
+      "expected_suffixes": [
+        ".npy"
+      ],
+      "role": "author-processed vocalized-word sEEG (stacked HGA and LFS)"
+    },
+    {
+      "name": "Processed_sEEG_Mimed_Word.zip",
+      "size_bytes": 120696550,
+      "md5": "4b6710048a824e7acb442e5f8dac0e3e",
+      "url": "https://zenodo.org/api/records/14696348/files/Processed_sEEG_Mimed_Word.zip/content",
+      "expected_suffixes": [
+        ".npy"
+      ],
+      "role": "author-processed mimed-word sEEG for optional transfer analysis"
+    },
+    {
+      "name": "Processed_sEEG_Imagined_Word.zip",
+      "size_bytes": 120695692,
+      "md5": "dd7ee3a086e7755e110485bd3f5af15e",
+      "url": "https://zenodo.org/api/records/14696348/files/Processed_sEEG_Imagined_Word.zip/content",
+      "expected_suffixes": [
+        ".npy"
+      ],
+      "role": "author-processed imagined-word sEEG for optional transfer analysis"
+    }
+  ]
+}

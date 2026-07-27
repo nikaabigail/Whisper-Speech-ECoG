@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "status": "development_only",
+  "dataset": "swpd",
+  "subjects": ["sub-01"],
+  "whisper_model": "openai/whisper-base",
+  "whisper_revision": "e37978b90ca9030d5170a5c07aadb050351a65bb",
+  "layers": [3, 4, 5],
+  "fixed_ensemble": [3, 4, 5],
+  "seed": 4,
+  "neural_context_ms": [-1000, 0],
+  "notes": "Loader, MEL reproduction, VAD audit, and one-seed smoke only. No confirmatory claim."
+}

@@ -12,6 +12,7 @@ __pycache__/
 htmlcov/
 .venv/
 venv/
+*.egg-info/
 
 # Local editor and operating-system files
 .idea/
@@ -34,6 +35,18 @@ datasets/
 **/data/
 **/dataset/
 **/datasets/
+# The external-validation package has a Python ``data`` namespace containing
+# read-only adapters (never recordings). Keep those source files publishable.
+!05_external_validation/src/whisper_ecog_ext/data/
+# Re-ignore every payload in the source namespace, then admit only reviewed code.
+05_external_validation/src/whisper_ecog_ext/data/*
+!05_external_validation/src/whisper_ecog_ext/data/__init__.py
+!05_external_validation/src/whisper_ecog_ext/data/vocalmind.py
+*.zip
+*.nwb
+*.xdf
+*.csv
+*.tsv
 *.h5
 *.hdf5
 *.mat

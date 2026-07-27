@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "dataset": {
+    "short_name": "swpd",
+    "title": "Dataset of Speech Production in intracranial Electroencephalography",
+    "doi": "10.17605/OSF.IO/NRGX6",
+    "article_doi": "10.1038/s41597-022-01542-9",
+    "landing_page": "https://osf.io/nrgx6/",
+    "license": "CC BY 4.0",
+    "pilot_subject": "sub-01",
+    "confirmatory_subjects_locked": [
+      "sub-02",
+      "sub-03",
+      "sub-04",
+      "sub-05",
+      "sub-06",
+      "sub-07",
+      "sub-08",
+      "sub-09",
+      "sub-10"
+    ]
+  },
+  "archive": {
+    "name": "SingleWordProductionDutch-iBIDS.zip",
+    "url": "https://osf.io/download/g6q5m/",
+    "size_bytes": 2794936886,
+    "sha256": "015bc9c565c3dbdc7259c01be54f62b3346cbd7dc5cec8156eb718f64b6cbcd9",
+    "archive_root": "SingleWordProductionDutch-iBIDS",
+    "observed_head_content_length_bytes": 2774631349,
+    "head_size_warning": "On 2026-07-27 the OSF/Waterbutler HEAD chain reported 2774631349 bytes, while a ranged GET and the valid ZIP central directory reported 2794936886 bytes. The downloader therefore verifies the pinned SHA-256 and actual completed-file size and never accepts the HEAD Content-Length as proof of integrity."
+  },
+  "official_code": {
+    "repository": "https://github.com/neuralinterfacinglab/SingleWordProductionDutch",
+    "commit": "cfb563696a8d44207532e3777ba6c5aabaf68805",
+    "license": "MIT"
+  },
+  "verified_utc": "2026-07-27T11:30:00Z"
+}

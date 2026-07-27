@@ -22,10 +22,11 @@ from urllib.parse import unquote
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SKIP_DIRS = {".git", "__pycache__", ".pytest_cache", ".mypy_cache"}
+SKIP_DIRS = {".git", ".venv", "__pycache__", ".pytest_cache", ".mypy_cache"}
 MAX_RELEASE_FILE_BYTES = 25 * 1024 * 1024
 FORBIDDEN_DATA_SUFFIXES = {
     ".ckpt",
+    ".csv",
     ".flac",
     ".eeg",
     ".edf",
@@ -36,6 +37,7 @@ FORBIDDEN_DATA_SUFFIXES = {
     ".joblib",
     ".mat",
     ".npy",
+    ".nwb",
     ".npz",
     ".set",
     ".vhdr",
@@ -46,7 +48,14 @@ FORBIDDEN_DATA_SUFFIXES = {
     ".pth",
     ".safetensors",
     ".textgrid",
+    ".tsv",
     ".wav",
+    ".xdf",
+    ".zip",
+}
+ALLOWED_CURATED_TABLES = {
+    "results/async/paper_style_async_pr_multiseed.csv",
+    "results/reported_metrics.csv",
 }
 TEXT_SUFFIXES = {
     "",
@@ -68,6 +77,35 @@ TEXT_SUFFIXES = {
 
 
 def release_files() -> Iterable[Path]:
+    """Yield only files Git would publish, with a filesystem fallback."""
+
+    try:
+        completed = subprocess.run(
+            [
+                "git",
+                "-C",
+                str(ROOT),
+                "ls-files",
+                "--cached",
+                "--others",
+                "--exclude-standard",
+                "-z",
+            ],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            check=False,
+        )
+    except OSError:
+        completed = None
+    if completed is not None and completed.returncode == 0:
+        for raw_path in completed.stdout.split(b"\0"):
+            if not raw_path:
+                continue
+            path = ROOT / os.fsdecode(raw_path)
+            if path.is_file():
+                yield path
+        return
+
     for path in ROOT.rglob("*"):
         if not path.is_file():
             continue
@@ -84,9 +122,7 @@ def check_markdown_links() -> None:
     """Require every local Markdown link/image target to exist inside the repo."""
     pattern = re.compile(r"!?\[[^\]]*\]\(([^)]+)\)")
     findings: list[str] = []
-    for markdown in ROOT.rglob("*.md"):
-        if any(part in SKIP_DIRS for part in markdown.relative_to(ROOT).parts):
-            continue
+    for markdown in (path for path in release_files() if path.suffix.lower() == ".md"):
         text = markdown.read_text(encoding="utf-8")
         for match in pattern.finditer(text):
             raw_target = match.group(1).strip()
@@ -185,11 +221,26 @@ def check_no_private_paths_or_secrets() -> None:
         "C:" + backslash + "ossadtchi",
         "C:" + slash + "ossadtchi",
     )
+    private_patterns = {
+        "Windows user profile path": re.compile(
+            r"(?i)\b[A-Z]:[\\/]Users[\\/][^<>:\"/\\|?*\s]+"
+        ),
+        "credential-bearing URL": re.compile(
+            r"(?i)https?://[^\s/@:]+:[^\s/@]+@[^\s/]+"
+        ),
+    }
     secret_patterns = {
         "AWS access-key id": re.compile(r"\bAKIA[0-9A-Z]{16}\b"),
         "GitHub token": re.compile(r"\b(?:gh[pousr]_[A-Za-z0-9_]{20,}|github_pat_[A-Za-z0-9_]{20,})\b"),
         "Hugging Face token": re.compile(r"\bhf_[A-Za-z0-9]{30,}\b"),
         "OpenAI-style secret": re.compile(r"\bsk-[A-Za-z0-9_-]{20,}\b"),
+        "GitLab token": re.compile(r"\bglpat-[A-Za-z0-9_-]{20,}\b"),
+        "Slack token": re.compile(r"\bxox[baprs]-[A-Za-z0-9-]{20,}\b"),
+        "Google API key": re.compile(r"\bAIza[0-9A-Za-z_-]{35}\b"),
+        "literal credential assignment": re.compile(
+            r"(?i)\b(?:password|passwd|api[_-]?key|client[_-]?secret)\s*[:=]\s*"
+            r"[\"'][^\"'\r\n]{8,}[\"']"
+        ),
         "private key": re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----"),
     }
     findings = []
@@ -201,6 +252,9 @@ def check_no_private_paths_or_secrets() -> None:
             if literal.casefold() in text.casefold():
                 findings.append(f"{relative(path)}: private absolute path")
                 break
+        for label, pattern in private_patterns.items():
+            if pattern.search(text):
+                findings.append(f"{relative(path)}: possible {label}")
         for label, pattern in secret_patterns.items():
             if pattern.search(text):
                 findings.append(f"{relative(path)}: possible {label}")
@@ -214,7 +268,10 @@ def check_repository_payload() -> None:
         rel = relative(path)
         if path.stat().st_size > MAX_RELEASE_FILE_BYTES:
             findings.append(f"{rel}: {path.stat().st_size / 1024**2:.1f} MiB exceeds 25 MiB")
-        if path.suffix.lower() in FORBIDDEN_DATA_SUFFIXES:
+        if (
+            path.suffix.lower() in FORBIDDEN_DATA_SUFFIXES
+            and rel not in ALLOWED_CURATED_TABLES
+        ):
             findings.append(f"{rel}: model/data artifact extension {path.suffix}")
         if path.name.casefold() == "patients.json":
             findings.append(f"{rel}: private patient configuration name")

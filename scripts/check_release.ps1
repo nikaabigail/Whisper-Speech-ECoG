@@ -16,15 +16,44 @@ if (-not (Get-Command $PythonLauncher -ErrorAction SilentlyContinue)) {
 
 Push-Location -LiteralPath $repoRoot
 try {
-    $bytecodeArtifacts = @(
-        Get-ChildItem -LiteralPath $repoRoot -Recurse -Force -ErrorAction Stop |
-            Where-Object {
-                ($_.PSIsContainer -and $_.Name -eq "__pycache__") -or
-                (-not $_.PSIsContainer -and $_.Extension -match '^\.py[co]$')
+    # A reproducible local environment is intentionally allowed inside the checkout.
+    # Inspect only files that Git would publish; scanning .venv would otherwise flag
+    # dependency bytecode that is both expected and ignored.
+    $bytecodeArtifacts = @()
+    $releaseCandidates = $null
+    if (Get-Command git -ErrorAction SilentlyContinue) {
+        $insideGit = (& git rev-parse --is-inside-work-tree 2>$null)
+        if ($LASTEXITCODE -eq 0 -and $insideGit -eq "true") {
+            $gitTop = (& git rev-parse --show-toplevel 2>$null)
+            $resolvedGitTop = if ($gitTop) { (Resolve-Path -LiteralPath $gitTop).Path } else { $null }
+            if ($resolvedGitTop -eq $repoRoot) {
+                $releaseCandidates = @(& git ls-files --cached --others --exclude-standard)
+                $bytecodeArtifacts = @(
+                    $releaseCandidates |
+                        Where-Object {
+                            $_ -match '(^|[\\/])__pycache__([\\/]|$)' -or
+                            [IO.Path]::GetExtension($_) -match '^\.py[co]$'
+                        } |
+                        ForEach-Object { Join-Path $repoRoot $_ }
+                )
             }
-    )
+        }
+    }
+    if ($null -eq $releaseCandidates) {
+        $bytecodeArtifacts = @(
+            Get-ChildItem -LiteralPath $repoRoot -Recurse -Force -ErrorAction Stop |
+                Where-Object {
+                    $_.FullName -notmatch '[\\/](?:\.git|\.venv)(?:[\\/]|$)' -and
+                    (
+                        ($_.PSIsContainer -and $_.Name -eq "__pycache__") -or
+                        (-not $_.PSIsContainer -and $_.Extension -match '^\.py[co]$')
+                    )
+                } |
+                ForEach-Object { $_.FullName }
+        )
+    }
     if ($bytecodeArtifacts.Count -gt 0) {
-        $listed = ($bytecodeArtifacts | ForEach-Object { $_.FullName }) -join "`n"
+        $listed = $bytecodeArtifacts -join "`n"
         throw "Generated Python bytecode is present in the release tree. Remove it before packaging:`n$listed"
     }
 

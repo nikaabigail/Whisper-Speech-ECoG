@@ -2,7 +2,8 @@
 
 ## От MEL-бейзлайна к Whisper, ансамблю слоёв и непрерывному декодированию
 
-Чистая исследовательская выкладка кода для четырёх связанных этапов:
+Чистая исследовательская выкладка кода для четырёх исторических этапов и
+отдельной внешней валидации:
 
 **MEL baseline → Whisper synchronous → L3+L4+L5 ensemble → asynchronous / continuous decoding**
 
@@ -14,6 +15,7 @@
 [Быстрая навигация](#навигация) ·
 [Главные результаты](#главные-результаты) ·
 [Архитектура](docs/ARCHITECTURE.md) ·
+[Внешняя валидация](05_external_validation/README.md) ·
 [Происхождение](docs/PROVENANCE.md) ·
 [Чек-лист публикации](docs/PUBLISHING_CHECKLIST.md)
 
@@ -27,6 +29,7 @@
 | 2. Whisper sync | Декодирование заранее выровненных слов через представления Whisper | [02_whisper_sync](02_whisper_sync/README.md) |
 | 3. L3+L4+L5 | Усреднение вероятностей трёх комплементарных слоёв | [03_whisper_ensemble](03_whisper_ensemble/README.md) |
 | 4. Whisper async | Скользящее декодирование без подсказки о начале слова | [04_whisper_async](04_whisper_async/README.md) |
+| 5. External validation | Новый leakage-controlled MEL/Whisper L3/L4/L5 пайплайн для SWPD и VocalMind | [05_external_validation](05_external_validation/README.md) |
 | Результаты | Таблицы, определения метрик и графики | [results](results/README.md) |
 | Веса | Ожидаемая структура и правила целостности | [checkpoints](checkpoints/README.md) |
 
