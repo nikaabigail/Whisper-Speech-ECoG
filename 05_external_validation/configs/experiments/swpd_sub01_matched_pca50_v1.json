@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "status": "frozen_development_sub01",
+  "dataset": "SingleWordProductionDutch",
+  "subject": "sub-01",
+  "scope": "development_only_not_confirmatory",
+  "author_mel_baseline": {
+    "role": "reproducibility_control_only",
+    "path": "C:\\WhisperECoG\\SWPD\\runs\\author_mel_sub01_smoke\\swpd_sub01_author_mel_result_2026-07-27_11-57-35.json",
+    "sha256": "4f02fbedbceb59ac8a154b8482f439fc8ebf8cf3d7283455a50cbe0708e25d24",
+    "mean_correlation": 0.5199770946773461,
+    "included_in_matched_fit": false
+  },
+  "matched_comparison": {
+    "targets": ["mel80", "L3", "L4", "L5"],
+    "raw_dimensions": {"mel80": 80, "L3": 512, "L4": 512, "L5": 512},
+    "common_target_dimension": 50,
+    "target_transform": {
+      "fit_scope": "outer_train_only",
+      "standardize": true,
+      "reducer": "PCA",
+      "whiten": true,
+      "random_seed": 42
+    },
+    "neural_transform": {
+      "shared_across_targets": true,
+      "fit_scope": "outer_train_only",
+      "standardize": true,
+      "reducer": "PCA",
+      "components": 50,
+      "whiten": true,
+      "random_seed": 42
+    },
+    "decoder": {
+      "kind": "ordinary_least_squares",
+      "implementation": "sklearn.linear_model.LinearRegression",
+      "hyperparameters_identical_across_targets": true
+    },
+    "frame_grid_ms": 20,
+    "high_gamma_window_ms": 50,
+    "splits": {
+      "block_count": 5,
+      "trials_per_block": 20,
+      "test_rule": "each block is held out once",
+      "validation_rule": "next block cyclically after test",
+      "train_rule": "remaining three blocks",
+      "visual_events_define_blocks_only": true,
+      "visual_events_are_not_acoustic_onsets": true
+    },
+    "primary_metric": "fold_mean_fisher_z_component_correlation",
+    "secondary_metrics": ["standardized_mse", "explained_variance"],
+    "test_scope": "all_frames",
+    "speech_only_metric_status": "blocked_without_independently_audited_audio_intervals"
+  },
+  "fixed_before_run": true,
+  "interpretation": "Matched development comparison of target representations on sub-01. It is not a confirmatory population result and is separate from the preserved author MEL23 reproduction control."
+}

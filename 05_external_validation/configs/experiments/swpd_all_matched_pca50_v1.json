@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "status": "frozen_confirmatory_after_sub01_development",
+  "dataset": "SingleWordProductionDutch",
+  "all_subjects": ["sub-01", "sub-02", "sub-03", "sub-04", "sub-05", "sub-06", "sub-07", "sub-08", "sub-09", "sub-10"],
+  "development_subjects": ["sub-01"],
+  "primary_confirmatory_subjects": ["sub-02", "sub-03", "sub-04", "sub-05", "sub-06", "sub-07", "sub-08", "sub-09", "sub-10"],
+  "target_extraction": {
+    "whisper_model": "openai/whisper-base",
+    "whisper_revision": "e37978b90ca9030d5170a5c07aadb050351a65bb",
+    "whisper_layers": [3, 4, 5],
+    "whisper_chunk_seconds": 30,
+    "mel_bins": 80,
+    "target_frame_hz": 50,
+    "audio_processing_rate_hz": 48000,
+    "reducer_seed": 42
+  },
+  "author_mel_baseline": {
+    "role": "sub01_reproducibility_control_only",
+    "path": "C:\\WhisperECoG\\SWPD\\runs\\author_mel_sub01_smoke\\swpd_sub01_author_mel_result_2026-07-27_11-57-35.json",
+    "sha256": "4f02fbedbceb59ac8a154b8482f439fc8ebf8cf3d7283455a50cbe0708e25d24",
+    "mean_correlation": 0.5199770946773461,
+    "included_in_matched_fit": false
+  },
+  "matched_comparison": {
+    "targets": ["mel80", "L3", "L4", "L5"],
+    "raw_dimensions": {"mel80": 80, "L3": 512, "L4": 512, "L5": 512},
+    "common_target_dimension": 50,
+    "target_transform": {
+      "fit_scope": "outer_train_only",
+      "standardize": true,
+      "reducer": "PCA",
+      "whiten": true,
+      "random_seed": 42
+    },
+    "neural_transform": {
+      "shared_across_targets_within_subject_fold": true,
+      "fit_scope": "outer_train_only",
+      "standardize": true,
+      "reducer": "PCA",
+      "components": 50,
+      "whiten": true,
+      "random_seed": 42
+    },
+    "decoder": {
+      "kind": "ordinary_least_squares",
+      "implementation": "sklearn.linear_model.LinearRegression",
+      "hyperparameters_identical_across_targets": true
+    },
+    "frame_grid_ms": 20,
+    "high_gamma_window_ms": 50,
+    "splits": {
+      "block_count": 5,
+      "trials_per_block": 20,
+      "test_rule": "each block is held out once",
+      "validation_rule": "next block cyclically after test",
+      "train_rule": "remaining three blocks",
+      "visual_events_define_blocks_only": true,
+      "visual_events_are_not_acoustic_onsets": true
+    },
+    "primary_metric": "subject_mean_fold_fisher_z_component_correlation_all_frames",
+    "secondary_metrics": ["standardized_mse", "explained_variance"],
+    "primary_contrasts": ["L3-minus-mel80", "L4-minus-mel80", "L5-minus-mel80"],
+    "ensemble_status": "not_defined_because_layer_specific_pca_bases_are_not_aligned",
+    "speech_only_metric_status": "blocked_without_independently_audited_audio_intervals"
+  },
+  "population_inference": {
+    "unit": "patient",
+    "primary_n": 9,
+    "exclude_development_subject_from_primary_inference": true,
+    "report_all_ten_as_secondary_descriptive": true,
+    "interval": "two_sided_95_percent_t_interval_across_subjects",
+    "paired_test": "two_sided_paired_t_test_across_subjects",
+    "multiplicity_correction": "Holm correction across the three predeclared L3/L4/L5-minus-MEL80 contrasts"
+  },
+  "fixed_before_confirmatory_access": true
+}

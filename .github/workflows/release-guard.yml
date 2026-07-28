@@ -1,0 +1,39 @@
+name: Release guard
+
+on:
+  pull_request:
+  push:
+
+permissions:
+  contents: read
+
+jobs:
+  publication-safety:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.10"
+      - name: Check publishable files, links, secrets, and data payloads
+        run: python -B tests/smoke_test.py --skip-imports --skip-help
+      - name: Parse every PowerShell script
+        shell: powershell
+        run: |
+          $failures = @()
+          Get-ChildItem -Recurse -Filter *.ps1 -File | ForEach-Object {
+            $tokens = $null
+            $errors = $null
+            [System.Management.Automation.Language.Parser]::ParseFile(
+              $_.FullName,
+              [ref]$tokens,
+              [ref]$errors
+            ) | Out-Null
+            if ($errors.Count -gt 0) {
+              $failures += $errors
+            }
+          }
+          if ($failures.Count -gt 0) {
+            $failures | Format-List
+            throw "PowerShell parser errors"
+          }

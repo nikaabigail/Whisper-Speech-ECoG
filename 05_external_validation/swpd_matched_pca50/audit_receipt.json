@@ -1,0 +1,161 @@
+{
+  "checks": {
+    "all_neural_and_target_reducers_train_only": "pass",
+    "fold_metrics_recomputed": "pass",
+    "holm_adjustment_recomputed": "pass",
+    "ols_hyperparameters_identical": "pass",
+    "outer_test_ids_unique_and_complete": "pass",
+    "population_statistics_recomputed": "pass",
+    "raw_block_cache_checksums": "pass",
+    "saved_models_equal_independent_refits": "pass",
+    "saved_predictions_recomputed": "pass",
+    "shared_neural_reducer_per_fold": "pass",
+    "split_ids_disjoint": "pass",
+    "sub01_excluded_from_primary": "pass",
+    "sub10_has_no_model_or_test_result": "pass",
+    "sub10_qc_matches_raw_source": "pass",
+    "target_dimension_50_for_all_systems": "pass"
+  },
+  "claim_boundary": {
+    "not_supported": "No aligned L3+L4+L5 ensemble, word-classification, speech-only, causal, or asynchronous claim follows from this run.",
+    "supported": "Matched train-only PCA50/OLS predictability is higher for each tested Whisper layer than MEL80 across all eight confirmatory patients."
+  },
+  "created_utc": "2026-07-28T18:25:23.691140+00:00",
+  "dataset_manifest_checksum_verified": true,
+  "final_summary_sha256": "5c6fa8cbcedaf81867e11f77aafd502779190e5fb3abc4aa6ab333bb6424f3f6",
+  "kind": "swpd_matched_pca50_confirmatory_independent_audit",
+  "limitations": [
+    {
+      "code": "unused_validation_block",
+      "detail": "One 20-trial block per fold is reserved for validation but OLS has no selected hyperparameter, so only three of five blocks train each model. This is matched and conservative, not leakage; a four-train-block sensitivity analysis would use data more efficiently.",
+      "severity": "moderate"
+    },
+    {
+      "code": "all_frame_representation_metric",
+      "detail": "The primary outcome measures continuous all-frame representation predictability. It is not word-classification accuracy and may retain speech-versus-silence contribution.",
+      "severity": "moderate"
+    },
+    {
+      "code": "offline_noncausal_features",
+      "detail": "High-gamma uses zero-phase filtering and Whisper targets are bidirectional within chunks. The result supports offline representation decoding, not causal/asynchronous deployment.",
+      "severity": "moderate"
+    },
+    {
+      "code": "post_access_qc_exclusion",
+      "detail": "sub-10 exclusion was decided after data access. It is objective, source-only, fully checksummed, and no sub-10 model result exists, but it must remain explicit in the paper.",
+      "severity": "moderate"
+    },
+    {
+      "code": "small_patient_sample",
+      "detail": "Population inference uses eight confirmatory patients. All 8/8 paired effects are positive; confidence intervals and exact sign sensitivity should accompany parametric p-values.",
+      "severity": "minor"
+    }
+  ],
+  "protocol_checksum_verified": true,
+  "schema_version": 1,
+  "sensitivity_only_not_preregistered": {
+    "exact_two_sided_sign_test_for_8_of_8_wins": 0.0078125
+  },
+  "source_hashes_verified": {
+    "author_mel_implementation_sha256": "b8add4c63744e2e5f88071e42c36cdfc8e3b5f7c411ab08f06f15fa3ca698b4c",
+    "matched_implementation_sha256": "a215933bba3dc0bde2e009d79b958d3f1d737ca9e75604a815a996ad6410c859",
+    "nwb_adapter_sha256": "1b078b68c0cd41a850123a8bb11d5393cbe456d57eba542a698a629573abc41a",
+    "reducer_implementation_sha256": "d14b5144880d1a0691752df5b433d022054b55a688787a9087c33f77b5b0f7fc",
+    "runner_sha256": "bf236cc8dd03080a1a36987f14f0e1686a4ac4b18a893601af0f66808adb2051",
+    "target_extractor_sha256": "446fca9baafeaeb4fe13d2f152000e8f718da6aa97c302e5a9365b14306006e2"
+  },
+  "source_run_contract_sha256": "bf4315fdd2560d4371f867fbb446dbe6c4a459554e0b43af0978cffcb11d4331",
+  "source_run_id": "matched_pca50_all_v2",
+  "status": "pass_with_documented_limitations",
+  "subjects_verified": [
+    {
+      "folds": 5,
+      "models_refit": 20,
+      "prediction_rows_all_targets": 58060,
+      "reducers_verified": 25,
+      "subject": "sub-01",
+      "test_ids_unique_and_complete": true,
+      "test_rows_per_target": 14515
+    },
+    {
+      "folds": 5,
+      "models_refit": 20,
+      "prediction_rows_all_targets": 58060,
+      "reducers_verified": 25,
+      "subject": "sub-02",
+      "test_ids_unique_and_complete": true,
+      "test_rows_per_target": 14515
+    },
+    {
+      "folds": 5,
+      "models_refit": 20,
+      "prediction_rows_all_targets": 58064,
+      "reducers_verified": 25,
+      "subject": "sub-03",
+      "test_ids_unique_and_complete": true,
+      "test_rows_per_target": 14516
+    },
+    {
+      "folds": 5,
+      "models_refit": 20,
+      "prediction_rows_all_targets": 58064,
+      "reducers_verified": 25,
+      "subject": "sub-04",
+      "test_ids_unique_and_complete": true,
+      "test_rows_per_target": 14516
+    },
+    {
+      "folds": 5,
+      "models_refit": 20,
+      "prediction_rows_all_targets": 58056,
+      "reducers_verified": 25,
+      "subject": "sub-05",
+      "test_ids_unique_and_complete": true,
+      "test_rows_per_target": 14514
+    },
+    {
+      "folds": 5,
+      "models_refit": 20,
+      "prediction_rows_all_targets": 58076,
+      "reducers_verified": 25,
+      "subject": "sub-06",
+      "test_ids_unique_and_complete": true,
+      "test_rows_per_target": 14519
+    },
+    {
+      "folds": 5,
+      "models_refit": 20,
+      "prediction_rows_all_targets": 58080,
+      "reducers_verified": 25,
+      "subject": "sub-07",
+      "test_ids_unique_and_complete": true,
+      "test_rows_per_target": 14520
+    },
+    {
+      "folds": 5,
+      "models_refit": 20,
+      "prediction_rows_all_targets": 58080,
+      "reducers_verified": 25,
+      "subject": "sub-08",
+      "test_ids_unique_and_complete": true,
+      "test_rows_per_target": 14520
+    },
+    {
+      "folds": 5,
+      "models_refit": 20,
+      "prediction_rows_all_targets": 58080,
+      "reducers_verified": 25,
+      "subject": "sub-09",
+      "test_ids_unique_and_complete": true,
+      "test_rows_per_target": 14520
+    }
+  ],
+  "totals": {
+    "analyzable_subjects": 9,
+    "folds": 45,
+    "models_independently_refit": 180,
+    "prediction_rows_all_targets": 522620,
+    "primary_confirmatory_subjects": 8,
+    "reducers": 225
+  }
+}

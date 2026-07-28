@@ -2,7 +2,8 @@
 
 ## От MEL-бейзлайна к Whisper, ансамблю слоёв и непрерывному декодированию
 
-Чистая исследовательская выкладка кода для четырёх связанных этапов:
+Чистая исследовательская выкладка кода для четырёх исторических этапов и
+отдельной внешней валидации:
 
 **MEL baseline → Whisper synchronous → L3+L4+L5 ensemble → asynchronous / continuous decoding**
 
@@ -13,6 +14,8 @@
 [Быстрая навигация](#навигация) ·
 [Главные результаты](#главные-результаты) ·
 [Архитектура](docs/ARCHITECTURE.md) ·
+[Внешняя валидация](05_external_validation/README.md) ·
+[SWPD: MEL vs Whisper](05_external_validation/swpd_matched_pca50/README.md) ·
 [Происхождение](docs/PROVENANCE.md) ·
 [Чек-лист публикации](docs/PUBLISHING_CHECKLIST.md)
 
@@ -26,6 +29,8 @@
 | 2. Whisper sync | Декодирование заранее выровненных слов через представления Whisper | [02_whisper_sync](02_whisper_sync/README.md) |
 | 3. L3+L4+L5 | Усреднение вероятностей трёх комплементарных слоёв | [03_whisper_ensemble](03_whisper_ensemble/README.md) |
 | 4. Whisper async | Скользящее декодирование без подсказки о начале слова | [04_whisper_async](04_whisper_async/README.md) |
+| 5. External validation | Новый leakage-controlled MEL/Whisper L3/L4/L5 пайплайн для SWPD и VocalMind | [05_external_validation](05_external_validation/README.md) |
+| 5a. SWPD matched PCA50 | Завершённое patient-level сравнение MEL80 против Whisper L3/L4/L5 | [SWPD results, figures and audit](05_external_validation/swpd_matched_pca50/README.md) |
 | Результаты | Таблицы, определения метрик и графики | [results](results/README.md) |
 | Веса | Ожидаемая структура и правила целостности | [checkpoints](checkpoints/README.md) |
 
@@ -87,6 +92,28 @@
 
 Accuracy синхронной 27-классовой задачи и F1 непрерывного обнаружения событий
 измеряют разные постановки и напрямую между собой не сравниваются.
+
+### Внешняя валидация SWPD
+
+На независимом публичном ECoG-датасете SWPD выполнено matched-сравнение:
+одинаковые neural frames, temporal splits, train-only PCA50, OLS и метрика;
+меняется только акустическое target-представление. Primary confirmatory cohort —
+`sub-02…sub-09`, `n=8` пациентов.
+
+| Система | Held-out component correlation, mean ± SD | 95% t-CI |
+|---|---:|---:|
+| MEL80 | 0,02388 ± 0,00956 | [0,01588; 0,03187] |
+| Whisper L3 | 0,05327 ± 0,01828 | [0,03799; 0,06856] |
+| Whisper L4 | 0,05397 ± 0,01726 | [0,03954; 0,06840] |
+| **Whisper L5** | **0,05522 ± 0,01685** | **[0,04113; 0,06930]** |
+
+Каждый слой Whisper превысил MEL80 у `8/8` пациентов; Holm-adjusted p-values:
+L3 `3,37×10⁻⁵`, L4 `2,67×10⁻⁵`, L5 `1,98×10⁻⁵`.
+
+![SWPD: matched MEL80 versus Whisper](05_external_validation/swpd_matched_pca50/figure_00_main_summary.png)
+
+Полный протокол, QC `sub-10`, архитектура, PNG/SVG, таблицы и независимый аудит
+находятся в разделе [SWPD matched PCA50](05_external_validation/swpd_matched_pca50/README.md).
 
 ## Что именно находится в репозитории
 

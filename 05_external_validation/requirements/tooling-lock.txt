@@ -1,0 +1,4 @@
+# Packaging tools used by the clean Windows bootstrap verified on 2026-07-27.
+pip==26.1.2
+setuptools==83.0.0
+wheel==0.47.0

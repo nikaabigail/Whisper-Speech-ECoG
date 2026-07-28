@@ -1,0 +1,39 @@
+{
+  "files": [
+    "CODE_AUDIT.md",
+    "README.md",
+    "asset_manifest.json",
+    "audit_receipt.json",
+    "figure_00_main_summary.png",
+    "figure_00_main_summary.svg",
+    "figure_01_system_performance.png",
+    "figure_01_system_performance.svg",
+    "figure_02_paired_patients.png",
+    "figure_02_paired_patients.svg",
+    "figure_03_whisper_minus_mel.png",
+    "figure_03_whisper_minus_mel.svg",
+    "figure_04_architecture.png",
+    "figure_04_architecture.svg",
+    "figure_05_qc_cohort_flow.png",
+    "figure_05_qc_cohort_flow.svg",
+    "figure_captions.md",
+    "publication_tables.md",
+    "table_01_system_performance.csv",
+    "table_02_whisper_vs_mel_contrasts.csv",
+    "table_03_patient_level_metrics.csv"
+  ],
+  "kind": "swpd_matched_pca50_publication_assets",
+  "primary_subjects": [
+    "sub-02",
+    "sub-03",
+    "sub-04",
+    "sub-05",
+    "sub-06",
+    "sub-07",
+    "sub-08",
+    "sub-09"
+  ],
+  "schema_version": 1,
+  "source_result_id": "swpd_matched_pca50_all_v2_qc_final",
+  "source_summary_sha256": "5c6fa8cbcedaf81867e11f77aafd502779190e5fb3abc4aa6ab333bb6424f3f6"
+}

@@ -1,0 +1,134 @@
+{
+  "schema_version": 2,
+  "status": "development_only",
+  "dataset": "VocalMind-v2",
+  "analysis": "primary_overt_word_20class",
+  "run_scope": "pilot",
+  "folds": [1],
+  "seeds": [4],
+  "frame_grid": {
+    "neural_sample_rate_hz": 1000,
+    "regression_frame_hz": 1000,
+    "window_samples": 1001,
+    "window_end_offset_samples": 0,
+    "first_frame_end_sample": 1000,
+    "hidden_stride": 10,
+    "classifier_frame_hz": 100,
+    "strict_historical_parity": true,
+    "zero_padding": false
+  },
+  "neural_preprocessing": {
+    "sample_rate_hz": 1000,
+    "channel_policy": "release_110_clean_channels_then_car",
+    "high_pass_hz": 10.0,
+    "low_pass_hz": 200.0,
+    "butterworth_order": 5,
+    "notch_frequencies_hz": [50.0, 100.0, 150.0],
+    "notch_q": [25.0, 100.0, 150.0],
+    "filter_direction": "forward_backward_zero_phase",
+    "per_trial_z_score": false,
+    "downstream_standardization": "train_only_channel_standardizer"
+  },
+  "audio": {
+    "source_sample_rate_hz": 44100,
+    "source_channels": 2,
+    "channel_policy": "arithmetic_mean_to_mono"
+  },
+  "targets": {
+    "target_dim": 50,
+    "reducer_seed": 42,
+    "mel": {
+      "kind": "vocalmind_author_spectral_parameters_shared_peak_normalization",
+      "waveform_normalization": "per_trial_peak_abs_epsilon_1e-8_shared_with_whisper",
+      "source_revision": "e1202bab23cc8a2c944e5e13264b2ce0a37b2d03",
+      "n_mels": 80,
+      "sample_rate_hz": 16000,
+      "n_fft": 1024,
+      "hop_length": 320,
+      "win_length": 1024,
+      "window": "hann",
+      "center": true,
+      "pad_mode": "constant",
+      "spectrum": "magnitude_not_power",
+      "fmin_hz": 80.0,
+      "fmax_hz": 7600.0,
+      "log": "log10",
+      "epsilon": 0.000001,
+      "pca_components": 50,
+      "pca_whiten": true
+    },
+    "whisper": {
+      "model": "openai/whisper-base",
+      "revision": "e37978b90ca9030d5170a5c07aadb050351a65bb",
+      "layers": [3, 4, 5],
+      "raw_dim": 512,
+      "peak_normalize": true,
+      "pca_components": 50,
+      "pca_whiten": true
+    }
+  },
+  "ecog_encoder": {
+    "target_dim": 50,
+    "window_samples": 1001,
+    "hidden_channels": 30,
+    "temporal_stride": 10,
+    "filtering_kernel": 25,
+    "envelope_kernel": 15,
+    "use_lstm": true,
+    "hidden_dim": 3030
+  },
+  "classifier": {
+    "input_features": 3030,
+    "num_classes": 20,
+    "convolution_channels": 100,
+    "convolution_kernel": 10,
+    "pool_kernel": 10,
+    "lstm_hidden": 100
+  },
+  "hidden_extraction": {
+    "batch_size": 32
+  },
+  "regression_training": {
+    "max_epochs": 100,
+    "batch_size": 32,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0,
+    "patience": 10,
+    "min_delta": 0.0,
+    "grad_clip_norm": 1.0,
+    "num_workers": 0,
+    "strict_determinism": true,
+    "initialize_from_seed": true
+  },
+  "classifier_training": {
+    "max_epochs": 100,
+    "batch_size": 8,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0,
+    "patience": 10,
+    "min_delta": 0.0,
+    "grad_clip_norm": 1.0,
+    "num_workers": 0,
+    "strict_determinism": true,
+    "initialize_from_seed": true
+  },
+  "selection": {
+    "regression_model": "minimum_validation_loss_with_early_stopping",
+    "word_model": "minimum_validation_loss_with_early_stopping",
+    "threshold": "not_applicable_closed_set_argmax",
+    "test_gate": "all_configured_seeds_x_all_predeclared_units_fixed"
+  },
+  "ensemble": {
+    "layers": [3, 4, 5],
+    "rule": "arithmetic_mean_of_softmax_probabilities",
+    "subset_search": false
+  },
+  "mel_compute_matched": {
+    "production_required": true,
+    "production_seed_offsets": [0, 1000, 2000],
+    "pilot_initializations": 1,
+    "rule": "arithmetic_mean_of_softmax_probabilities",
+    "subset_search": false
+  },
+  "notes": "Development-only metadata plan. Numeric access to repetitions 1-5 is forbidden before protocol freeze because every repetition becomes held-out test in one production fold. Any engineering smoke must use rep6 only and must not report a classification metric."
+}

@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "record_status": "frozen_confirmatory_result_with_post_access_data_qc_exclusion",
+  "created_date": "2026-07-28",
+  "dataset": "SingleWordProductionDutch",
+  "source_commit_before_worktree_changes": "10ab97862b86c89ec32634a7d2a312d9b46e121e",
+  "planned_subjects": ["sub-01", "sub-02", "sub-03", "sub-04", "sub-05", "sub-06", "sub-07", "sub-08", "sub-09", "sub-10"],
+  "development_subject": "sub-01",
+  "primary_confirmatory_subjects_after_qc": ["sub-02", "sub-03", "sub-04", "sub-05", "sub-06", "sub-07", "sub-08", "sub-09"],
+  "primary_n": 8,
+  "secondary_analyzable_subjects": ["sub-01", "sub-02", "sub-03", "sub-04", "sub-05", "sub-06", "sub-07", "sub-08", "sub-09"],
+  "secondary_n": 9,
+  "qc_exclusion": {
+    "subject": "sub-10",
+    "reason_code": "incomplete_recording_final_five_word_trials_missing",
+    "word_event_count": 100,
+    "positive_duration_word_event_count": 95,
+    "zero_duration_final_word_event_count": 5,
+    "final_placeholder_sample": 291899,
+    "ieeg_sample_count": 291900,
+    "decision": "exclude_entire_subject_from_population_inference",
+    "no_imputation": true,
+    "no_special_case_95_trial_split": true
+  },
+  "protocol": {
+    "parent_path": "configs/experiments/swpd_all_matched_pca50_v1.json",
+    "parent_sha256": "5c1ee6521d6680f37ce04e23e40c773631b46616c49d88197ad5d5ab014510ef",
+    "qc_amendment_path": "configs/experiments/swpd_all_matched_pca50_v1_qc_amendment_sub10.json",
+    "qc_amendment_sha256": "dacf398655dbc9ec410247456c495e9776c91008c5e9029fe4c83ff82645e40b",
+    "targets": ["mel80", "L3", "L4", "L5"],
+    "common_target_dimension": 50,
+    "decoder": "ordinary_least_squares_identical_across_targets",
+    "primary_metric": "subject_mean_fold_fisher_z_component_correlation_all_frames",
+    "multiplicity_correction": "Holm_across_three_predeclared_Whisper_minus_MEL80_contrasts"
+  },
+  "primary_systems": {
+    "mel80": {
+      "fisher_r_mean": 0.023876472442303495,
+      "fisher_r_sd": 0.009562242687886462,
+      "fisher_r_ci95_t": [0.015882237497529688, 0.0318707073870773],
+      "standardized_mse_mean": 1.045108031380258,
+      "standardized_mse_sd": 0.013973462866614411
+    },
+    "L3": {
+      "fisher_r_mean": 0.05327449887020052,
+      "fisher_r_sd": 0.018281609379687855,
+      "fisher_r_ci95_t": [0.0379906909477195, 0.06855830679268153],
+      "standardized_mse_mean": 0.891475348761966,
+      "standardized_mse_sd": 0.011548119682794943
+    },
+    "L4": {
+      "fisher_r_mean": 0.053969862993975784,
+      "fisher_r_sd": 0.01726063673810891,
+      "fisher_r_ci95_t": [0.03953960956026632, 0.06840011642768525],
+      "standardized_mse_mean": 0.9219578032661071,
+      "standardized_mse_sd": 0.012266033409487172
+    },
+    "L5": {
+      "fisher_r_mean": 0.05521961904013522,
+      "fisher_r_sd": 0.016847947595728264,
+      "fisher_r_ci95_t": [0.041134382363585395, 0.06930485571668504],
+      "standardized_mse_mean": 0.8792880074984631,
+      "standardized_mse_sd": 0.015891425995595832
+    }
+  },
+  "primary_contrasts": {
+    "L3_minus_mel80": {
+      "mean": 0.029398026427897028,
+      "sd": 0.008911931255497744,
+      "wins": "8/8",
+      "paired_t_p_raw": 0.0000337251950529193,
+      "paired_t_p_holm": 0.0000337251950529193
+    },
+    "L4_minus_mel80": {
+      "mean": 0.030093390551672282,
+      "sd": 0.007928095812733007,
+      "wins": "8/8",
+      "paired_t_p_raw": 0.0000133701819092015,
+      "paired_t_p_holm": 0.000026740363818403
+    },
+    "L5_minus_mel80": {
+      "mean": 0.031343146597831724,
+      "sd": 0.007426354668702398,
+      "wins": "8/8",
+      "paired_t_p_raw": 0.00000658519503323759,
+      "paired_t_p_holm": 0.0000197555850997128
+    }
+  },
+  "artifacts": {
+    "run_id": "matched_pca50_all_v2",
+    "final_summary_sha256": "5c6fa8cbcedaf81867e11f77aafd502779190e5fb3abc4aa6ab333bb6424f3f6",
+    "primary_csv_sha256": "7bc5759d3beeb9fef04ff64bf41aebafe284ee24fbd051af051ddece98732d43",
+    "qc_exclusion_sha256": "868d4121ec1460deb04a4ebece48097c111631a0c95a01a24cfe8bd4c603864c",
+    "finalizer_sha256": "ceb4bc9249b4b2a5139a3057d26a8742bc25beabf5fd19fc387c888bb4b22582"
+  },
+  "interpretation": {
+    "supported": "Under the matched train-only PCA50 and identical OLS protocol, each Whisper layer exceeded MEL80 in all eight analyzable confirmatory patients, and every predeclared contrast remained significant after Holm correction.",
+    "not_supported": "The PCA coordinates of L3/L4/L5 are layer-specific, so this result does not test an L3+L4+L5 ensemble, word-classification accuracy, or asynchronous event decoding."
+  }
+}

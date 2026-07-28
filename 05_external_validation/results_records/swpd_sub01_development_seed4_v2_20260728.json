@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "record_status": "frozen_development_result",
+  "created_utc": "2026-07-28T11:14:13.7162267Z",
+  "dataset": "SingleWordProductionDutch",
+  "dataset_doi": "10.17605/OSF.IO/NRGX6",
+  "subject": "sub-01",
+  "scope": "development_only_not_confirmatory",
+  "source_commit": "10ab97862b86c89ec32634a7d2a312d9b46e121e",
+  "primary_run": {
+    "path": "C:\\WhisperECoG_Work\\SWPD\\runs\\seed4_v2\\regression_summary.json",
+    "sha256": "2fab4111d4d868a3204a88768b42b8758271637aa8745a066cc01aa0ead10052",
+    "test_frames": 58062,
+    "split": {
+      "train_blocks": [1, 2, 3],
+      "validation_block": 0,
+      "test_block": 4
+    },
+    "reported_whitened_pca50_metrics": {
+      "mel80_fixed_three_initialization_fisher_r": 0.016799250269762277,
+      "mel80_fixed_three_initialization_standardized_mse": 1.142775997491395,
+      "L3_fisher_r": 0.012379844571993093,
+      "L4_fisher_r": 0.019049,
+      "L5_fisher_r": 0.015098
+    }
+  },
+  "posthoc_original_coordinate_diagnostic": {
+    "status": "diagnostic_not_preregistered_headline",
+    "reason": "The production summary evaluated whitened PCA coordinates, whereas the published SWPD baseline evaluates the original acoustic representation coordinates.",
+    "method": "Invert the fixed train-only PCA50 whitening and scaler for stored held-out predictions, then compute per-coordinate Pearson correlation against the untouched raw held-out target arrays.",
+    "mel80_arithmetic_mean_component_r": {
+      "seed_4": 0.39936,
+      "seed_1004": 0.15642,
+      "seed_2004": 0.43740,
+      "fixed_three_initialization_mean": 0.46522
+    },
+    "mel80_fixed_three_initialization_fisher_r": 0.46603,
+    "mel80_fixed_three_initialization_median_component_r": 0.47808,
+    "mel80_fixed_three_initialization_max_component_r": 0.50829,
+    "mel80_positive_components": "80/80",
+    "whisper_raw_coordinate_mean_r": {
+      "L3": 0.05193,
+      "L4": 0.02948,
+      "L5": 0.06254
+    },
+    "whisper_interpretation_warning": "Mean correlation over raw Whisper coordinates is basis-dependent and is not treated as a representation-level performance metric.",
+    "artifacts": {
+      "mel_predictions_path": "C:\\WhisperECoG_Work\\SWPD\\runs\\seed4_v2\\controls\\mel80_fixed_3init_test_predictions.npz",
+      "mel_predictions_sha256": "8d019a541114f07d68951efb45dea9acc64de4c610161156ce421d5f6afe1596",
+      "mel_reducer_path": "C:\\WhisperECoG_Work\\SWPD\\runs\\seed4_v2\\transforms\\mel80_target_pca50\\reducer_arrays.npz",
+      "mel_reducer_sha256": "f4d95fa3eb4b938df7f787fa0623185f7350559bc14cf1dc25d98343d9902ac6",
+      "raw_test_targets_path": "C:\\WhisperECoG_Work\\SWPD\\cache_1000hz\\neural_block_04_targets.npz",
+      "raw_test_targets_sha256": "3cc937f35a3f1a2f7699193fa5b08f747025507a409a76e35c8931c2f25f1e9c"
+    }
+  },
+  "timing_diagnostic": {
+    "zero_lag_mel80_fixed_three_initialization_mean_r": 0.465216,
+    "best_scanned_lag_ms": -50,
+    "best_scanned_lag_mean_r": 0.469219,
+    "interpretation": "No gross one-second shift or frame-order defect was found; the small 50 ms optimum is a sensitivity observation and was not used to retune the held-out result."
+  },
+  "author_swpd_reference": {
+    "path": "C:\\WhisperECoG\\SWPD\\runs\\author_mel_sub01_smoke\\swpd_sub01_author_mel_result_2026-07-27_11-57-35.json",
+    "sha256": "4f02fbedbceb59ac8a154b8482f439fc8ebf8cf3d7283455a50cbe0708e25d24",
+    "prediction_sha256": "aff99ffd25618ef640498de545384ac6230f1d36a714bb85e7a008adee1afef9",
+    "exact_modernized_author_pipeline_mean_correlation": 0.5199770946773461,
+    "comparison_warning": "The author reference uses 23-bin log-MEL, high-gamma features, train-fold PCA50 and OLS with 10-fold non-shuffled cross-validation. It is not architecture-identical to seed4_v2."
+  },
+  "event_status": {
+    "asynchronous_gate_open": false,
+    "synchronous_word_classification_evaluated": false,
+    "fixed_L3_L4_L5_event_ensemble_evaluated": false
+  },
+  "interpretation": "The frozen SWPD sub-01 result is a development pilot. The directly stored headline r=0.0168 is a whitened-PCA metric and must not be compared with the authors' raw acoustic-coordinate r. The post-hoc original-coordinate MEL diagnostic is r=0.46522; it does not replace a preregistered confirmatory metric and does not authorize access to sub-02 through sub-10."
+}

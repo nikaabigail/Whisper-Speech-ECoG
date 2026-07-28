@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "status": "development_sub01_only",
+  "dataset": "SingleWordProductionDutch-iBIDS",
+  "subject": "sub-01",
+  "confirmatory_subjects_locked": [
+    "sub-02",
+    "sub-03",
+    "sub-04",
+    "sub-05",
+    "sub-06",
+    "sub-07",
+    "sub-08",
+    "sub-09",
+    "sub-10"
+  ],
+  "timebase": "events.tsv seconds relative to acquisition recording start",
+  "frame_hz": 1000,
+  "fast_smoke_frame_hz": 50,
+  "neural_window": {
+    "lag_ms": [-1000, 0],
+    "inclusive_samples": 1001,
+    "sample_rate_hz": 1000,
+    "edge_guard_seconds_per_block_side": 1.0
+  },
+  "neural_preprocessing": {
+    "usable_channels": "SEEG/ECOG in channels.tsv order excluding explicit bad flags",
+    "common_average_reference": false,
+    "notch_frequencies_hz": [50.0, 100.0, 150.0],
+    "notch_q": [25.0, 100.0, 150.0],
+    "band_pass_hz": [10.0, 200.0],
+    "butterworth_order": 5,
+    "filter_direction": "forward_backward_zero_phase_block_local",
+    "resampling": "deterministic_polyphase_1024_to_1000",
+    "normalization": "training_blocks_only_channel_standardizer"
+  },
+  "targets": {
+    "mel": {
+      "input_dimension": 80,
+      "train_only_transform": "StandardScaler+PCA50 whitening"
+    },
+    "whisper": {
+      "model": "openai/whisper-base",
+      "revision": "e37978b90ca9030d5170a5c07aadb050351a65bb",
+      "layers": [3, 4, 5],
+      "one_forward_for_all_layers_per_chunk": true,
+      "train_only_transform": "per-layer StandardScaler+PCA50 whitening"
+    }
+  },
+  "model": {
+    "class": "OneSecondEcogEncoder",
+    "target_dimension": 50,
+    "hidden_channels": 30,
+    "temporal_stride": 10,
+    "filtering_kernel": 25,
+    "envelope_kernel": 15,
+    "bidirectional_lstm": true,
+    "hidden_dimension": 3030
+  },
+  "training": {
+    "base_seed": 4,
+    "max_epochs": 100,
+    "batch_size": 32,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0,
+    "patience": 10,
+    "min_delta": 0.00001,
+    "grad_clip_norm": 1.0,
+    "num_workers": 0,
+    "strict_determinism": true,
+    "selection": "validation_MSE_only"
+  },
+  "compute_matched_controls": {
+    "production_mel_initialization_seeds": [4, 1004, 2004],
+    "single_mel_allowed_only_with_development_flag": true,
+    "mel_ensemble_rule": "arithmetic_mean_of_three_fixed_predictions",
+    "whisper_initialization_seed": 4
+  },
+  "downstream_hidden_trajectory": {
+    "regression_grid_hz": 1000,
+    "fixed_stride": 10,
+    "head_input_grid_hz": 100
+  },
+  "future_event_evaluation": {
+    "fixed_whisper_ensemble_layers": [3, 4, 5],
+    "ensemble_rule": "arithmetic_mean_of_probabilities",
+    "audio_only_manual_audit_required": true,
+    "visual_cues_are_ground_truth": false,
+    "gate_open": false
+  }
+}
