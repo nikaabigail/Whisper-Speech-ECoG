@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "record_status": "frozen_development_result",
+  "created_date": "2026-07-28",
+  "dataset": "SingleWordProductionDutch",
+  "subject": "sub-01",
+  "scope": "development_only_not_confirmatory",
+  "source_commit_before_worktree_changes": "10ab97862b86c89ec32634a7d2a312d9b46e121e",
+  "protocol": {
+    "name": "swpd_sub01_matched_pca50_v1",
+    "path": "configs/experiments/swpd_sub01_matched_pca50_v1.json",
+    "sha256": "4fb34b3e5a578bfbef286750c0106aa17ccf77d181ea6039fef9da8f274f830c",
+    "targets": ["mel80", "L3", "L4", "L5"],
+    "common_target_dimension": 50,
+    "neural_dimension": 50,
+    "fit_scope": "outer_train_only",
+    "decoder": "ordinary_least_squares_identical_across_targets",
+    "outer_folds": 5,
+    "blocks": 5,
+    "trials_per_block": 20,
+    "primary_metric": "fold_fisher_z_component_correlation_all_frames"
+  },
+  "preserved_author_control": {
+    "target": "raw_mel23",
+    "mean_correlation": 0.5199770946773461,
+    "sha256": "4f02fbedbceb59ac8a154b8482f439fc8ebf8cf3d7283455a50cbe0708e25d24",
+    "included_in_matched_fit": false
+  },
+  "aggregate_test": {
+    "mel80": {
+      "fisher_r_mean": 0.015183311360165633,
+      "fisher_r_sd": 0.005887311214755233,
+      "standardized_mse_mean": 1.0510552053407136,
+      "standardized_mse_sd": 0.05402237121544171
+    },
+    "L3": {
+      "fisher_r_mean": 0.04283436898836148,
+      "fisher_r_sd": 0.010815959591316537,
+      "standardized_mse_mean": 0.8987806690840561,
+      "standardized_mse_sd": 0.02321866574116696,
+      "delta_r_vs_mel80_mean": 0.0276510576281959,
+      "delta_r_vs_mel80_sd": 0.00635196291586862,
+      "wins_vs_mel80": "5/5"
+    },
+    "L4": {
+      "fisher_r_mean": 0.034464139332480805,
+      "fisher_r_sd": 0.005995649409203676,
+      "standardized_mse_mean": 0.9197081297983727,
+      "standardized_mse_sd": 0.03179195452744452,
+      "delta_r_vs_mel80_mean": 0.0192808279723152,
+      "delta_r_vs_mel80_sd": 0.00267134262215741,
+      "wins_vs_mel80": "5/5"
+    },
+    "L5": {
+      "fisher_r_mean": 0.03691049128322178,
+      "fisher_r_sd": 0.00461538478685928,
+      "standardized_mse_mean": 0.8766911674090524,
+      "standardized_mse_sd": 0.02880478210173541,
+      "delta_r_vs_mel80_mean": 0.0217271799230561,
+      "delta_r_vs_mel80_sd": 0.00412167161336747,
+      "wins_vs_mel80": "5/5"
+    }
+  },
+  "artifacts": {
+    "run_directory": "C:\\WhisperECoG_Work\\SWPD\\runs\\matched_pca50_sub01_v1",
+    "summary_sha256": "c71e4f9c1ed999f80b5e158913e21aa5566be554ff4803256e18d5c9edde7b1e",
+    "run_manifest_sha256": "8e730ed1cbd844b90bd4942f50302e58e252ea064b037ea2cbd20a463f01ee02",
+    "runner_sha256": "4fe0e3d243d48e0915e6043c9ece1c2072a5e836911ac4197f6212894bac7137",
+    "matched_implementation_sha256": "08ab1fe91a91d20b2866a3093493be2c67cf7398e3db6db806a643688f438756",
+    "validator_sha256": "52e4e72818775bd507a6246820ff3ab63b391afc70c8885bd4398f340ca15adf"
+  },
+  "validation": {
+    "test_suite": "96 passed",
+    "folds": 5,
+    "targets": 4,
+    "test_rows": 14515,
+    "unique_test_rows": 14515,
+    "train_only_reducer_receipts_verified": true,
+    "finite_predictions": true,
+    "confirmatory_subjects_read": false
+  },
+  "interpretation": {
+    "supported": "All three Whisper layers are more linearly predictable than matched MEL80 in every held-out temporal block of development participant sub-01 under the frozen PCA50 metric.",
+    "not_supported": "This single-participant temporal-fold result is not population evidence, word-classification accuracy, asynchronous event performance, or evidence for a PCA-space L3+L4+L5 ensemble."
+  }
+}

@@ -54,6 +54,9 @@ FORBIDDEN_DATA_SUFFIXES = {
     ".zip",
 }
 ALLOWED_CURATED_TABLES = {
+    "05_external_validation/swpd_matched_pca50/table_01_system_performance.csv",
+    "05_external_validation/swpd_matched_pca50/table_02_whisper_vs_mel_contrasts.csv",
+    "05_external_validation/swpd_matched_pca50/table_03_patient_level_metrics.csv",
     "results/async/paper_style_async_pr_multiseed.csv",
     "results/reported_metrics.csv",
 }

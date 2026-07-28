@@ -183,6 +183,37 @@ Visual events здесь определяют только независимы�
 выдаются за акустическое начало речи. Speech-only и asynchronous метрики остаются
 закрытыми, пока аудио-интервалы не построены независимо и не прошли ручной аудит.
 
+После завершённого development-аудита `sub-01` зафиксированный PCA50-протокол
+запускается отдельной последовательной очередью для запланированных 10 пациентов:
+
+```powershell
+.\scripts\start_swpd_all_matched_background.ps1
+
+.\scripts\watch_background_run.ps1 `
+  -LauncherReceipt "C:\WhisperECoG_Work\SWPD\runs\matched_pca50_all_v2\launcher\launcher.json" `
+  -Follow
+```
+
+`sub-01` повторяется для общей описательной таблицы, но исключается из primary,
+поскольку на нём разрабатывался протокол. Официальная запись `sub-10` обрывается
+после 95 валидных word trials; последние пять строк имеют нулевую длительность у
+последнего записанного отсчёта. Очередь поэтому намеренно не создаёт для него
+модель. После `sub-01…sub-09` выполните проверяемую QC-финализацию:
+
+```powershell
+.\.venv\Scripts\python.exe .\swpd_finalize_qc.py `
+  --data-root "C:\WhisperECoG\SWPD\extracted" `
+  --run-root "C:\WhisperECoG_Work\SWPD\runs\matched_pca50_all_v2"
+```
+
+Primary статистическая единица — восемь пациентов `sub-02…sub-09`. Для трёх
+заранее объявленных сравнений L3/L4/L5 против MEL80 применяется поправка Holm.
+`sub-10` исключается без импутации и без participant-specific 95-trial split.
+
+Очередь безопасно возобновляется той же командой: завершённые пациенты проверяются
+по checksum и пропускаются, незавершённый получает новую attempt-папку, а готовые
+block caches не вычисляются повторно. `Ctrl+C` в watcher не останавливает расчёт.
+
 ## Порядок вычислений
 
 1. Инвентаризация файлов, checksums и воспроизведение авторского MEL-контроля.
@@ -191,8 +222,9 @@ Visual events здесь определяют только независимы�
 4. Checkout уже опубликованного frozen v1 commit и проверка чистого worktree.
 5. Один неизменный VocalMind production run сразу содержит все пять folds/seeds;
    его test-gate откроется только после всех заранее объявленных каскадов.
-6. SWPD `sub-02`–`sub-10` открываются отдельным confirmatory runner только после
-   успешного development-аудита `sub-01`.
+6. SWPD confirmatory-данные открываются только отдельным frozen runner;
+   development `sub-01` исключён из primary, а source-truncated `sub-10`
+   исключён отдельным QC amendment. Итоговый primary cohort — `n=8`.
 
 Не следует одновременно запускать две тяжёлые CUDA-задачи на одном GPU. Остановка
 скрипта-наблюдателя через `Ctrl+C` безопасна только тогда, когда само обучение было

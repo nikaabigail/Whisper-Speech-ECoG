@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="656.39952pt" height="260.39952pt" viewBox="0 0 656.39952 260.39952" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-07-28T21:25:47.895194</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.8.4, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 260.39952
+L 656.39952 260.39952
+L 656.39952 -0
+L 0 -0
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 29.669983 168.329686
+L 132.389906 168.329686
+Q 145.229897 168.329686 145.229897 163.409695
+L 145.229897 99.44982
+Q 145.229897 94.52983 132.389906 94.52983
+L 29.669983 94.52983
+Q 16.829993 94.52983 16.829993 99.44982
+L 16.829993 163.409695
+Q 16.829993 168.329686 29.669983 168.329686
+z
+" clip-path="url(#p9d6d7308f6)" style="fill: #e5e7eb; stroke: #374151; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 196.589858 109.289801
+L 318.569767 109.289801
+Q 331.409758 109.289801 331.409758 104.36981
+L 331.409758 50.249916
+Q 331.409758 45.329926 318.569767 45.329926
+L 196.589858 45.329926
+Q 183.749868 45.329926 183.749868 50.249916
+L 183.749868 104.36981
+Q 183.749868 109.289801 196.589858 109.289801
+z
+" clip-path="url(#p9d6d7308f6)" style="fill: #dbeafe; stroke: #0072b2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 196.589858 215.069594
+L 318.569767 215.069594
+Q 331.409758 215.069594 331.409758 210.149604
+L 331.409758 151.109719
+Q 331.409758 146.189729 318.569767 146.189729
+L 196.589858 146.189729
+Q 183.749868 146.189729 183.749868 151.109719
+L 183.749868 210.149604
+Q 183.749868 215.069594 196.589858 215.069594
+z
+" clip-path="url(#p9d6d7308f6)" style="fill: #fee2e2; stroke: #b91c1c; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 395.60971 168.329686
+L 498.329633 168.329686
+Q 511.169623 168.329686 511.169623 163.409695
+L 511.169623 99.44982
+Q 511.169623 94.52983 498.329633 94.52983
+L 395.60971 94.52983
+Q 382.769719 94.52983 382.769719 99.44982
+L 382.769719 163.409695
+Q 382.769719 168.329686 395.60971 168.329686
+z
+" clip-path="url(#p9d6d7308f6)" style="fill: #dcfce7; stroke: #15803d; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 543.269599 168.329686
+L 626.729537 168.329686
+Q 639.569527 168.329686 639.569527 163.409695
+L 639.569527 99.44982
+Q 639.569527 94.52983 626.729537 94.52983
+L 543.269599 94.52983
+Q 530.429609 94.52983 530.429609 99.44982
+L 530.429609 163.409695
+Q 530.429609 168.329686 543.269599 168.329686
+z
+" clip-path="url(#p9d6d7308f6)" style="fill: #f3e8ff; stroke: #6b21a8; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_1">
+    <text style="font: 10px 'DejaVu Sans'" transform="translate(52.862757 128.590226)">10 planned</text>
+    <text style="font: 10px 'DejaVu Sans'" transform="translate(34.704945 139.788039)">SWPD participants</text>
+   </g>
+   <g id="text_2">
+    <text style="font: 10px 'DejaVu Sans'" transform="translate(240.46575 74.470332)">sub-01</text>
+    <text style="font: 10px 'DejaVu Sans'" transform="translate(211.75325 85.668144)">Development only</text>
+   </g>
+   <g id="text_3">
+    <text style="font: 9.5px 'DejaVu Sans'" transform="translate(218.348524 172.613146)">sub-10 excluded</text>
+    <text style="font: 9.5px 'DejaVu Sans'" transform="translate(214.633133 183.251068)">95/100 valid trials</text>
+    <text style="font: 9.5px 'DejaVu Sans'" transform="translate(210.3945 193.88899)">recording truncated</text>
+   </g>
+   <g id="text_4">
+    <text style="font: 10px 'DejaVu Sans'" transform="translate(410.136077 128.590226)">8 confirmatory</text>
+    <text style="font: 10px 'DejaVu Sans'" transform="translate(407.741546 139.788039)">sub-02…sub-09</text>
+   </g>
+   <g id="text_5">
+    <text style="font: 9.5px 'DejaVu Sans'" transform="translate(566.644529 123.413242)">Primary</text>
+    <text style="font: 9.5px 'DejaVu Sans'" transform="translate(555.086443 134.051164)">patient-level</text>
+    <text style="font: 9.5px 'DejaVu Sans'" transform="translate(562.761404 144.689086)">inference</text>
+   </g>
+   <g id="patch_7">
+    <path d="M 137.091659 128.866011
+Q 164.491962 104.367951 190.975439 80.689606
+" style="fill: none; stroke: #4b5563; stroke-width: 1.1; stroke-linecap: round"/>
+    <path d="M 186.876204 81.805972
+L 190.975439 80.689606
+L 189.408991 84.638814
+z
+" style="fill: #4b5563; stroke: #4b5563; stroke-width: 1.1; stroke-linecap: round"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 137.155138 136.377825
+Q 164.490223 158.48998 190.869145 179.828667
+" style="fill: none; stroke: #4b5563; stroke-width: 1.1; stroke-linecap: round"/>
+    <path d="M 189.109702 175.96158
+L 190.869145 179.828667
+L 186.71981 178.915969
+z
+" style="fill: #4b5563; stroke: #4b5563; stroke-width: 1.1; stroke-linecap: round"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 137.602234 130.19976
+Q 263.999839 130.19976 389.167606 130.19976
+" style="fill: none; stroke: #4b5563; stroke-width: 1.1; stroke-linecap: round"/>
+    <path d="M 385.367606 128.29976
+L 389.167606 130.19976
+L 385.367606 132.09976
+z
+" style="fill: #4b5563; stroke: #4b5563; stroke-width: 1.1; stroke-linecap: round"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 503.538042 130.19976
+Q 520.797956 130.19976 536.828033 130.19976
+" style="fill: none; stroke: #4b5563; stroke-width: 1.1; stroke-linecap: round"/>
+    <path d="M 533.028033 128.29976
+L 536.828033 130.19976
+L 533.028033 132.09976
+z
+" style="fill: #4b5563; stroke: #4b5563; stroke-width: 1.1; stroke-linecap: round"/>
+   </g>
+   <g id="text_6">
+    <text style="font: 700 13px 'DejaVu Sans'; text-anchor: middle" x="328.19976" y="29.339957" transform="rotate(-0 328.19976 29.339957)">Transparent cohort accounting</text>
+   </g>
+   <g id="text_7">
+    <text style="fill: #374151; font: 8.8px 'DejaVu Sans'; text-anchor: middle" x="328.19976" y="240.899544" transform="rotate(-0 328.19976 240.899544)">No imputation and no participant-specific 95-trial split; exclusion is based only on source-file QC.</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p9d6d7308f6">
+   <rect x="7.2" y="7.2" width="641.99952" height="245.99952"/>
+  </clipPath>
+ </defs>
+</svg>

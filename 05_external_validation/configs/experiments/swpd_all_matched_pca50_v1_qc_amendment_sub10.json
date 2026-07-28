@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "kind": "post_access_dataset_qc_amendment",
+  "parent_protocol": "swpd_all_matched_pca50_v1.json",
+  "parent_protocol_status": "preserved_unchanged",
+  "decision_date": "2026-07-28",
+  "excluded_subject": "sub-10",
+  "reason_code": "incomplete_recording_final_five_word_trials_missing",
+  "observed_word_event_count": 100,
+  "observed_positive_duration_word_event_count": 95,
+  "observed_zero_duration_final_word_event_count": 5,
+  "final_placeholder_sample": 291899,
+  "ieeg_sample_count": 291900,
+  "decision": "exclude_entire_subject_from_population_inference",
+  "rationale": "The final five word rows point to the last recorded sample and have zero duration, so no neural/audio segment exists. Imputation or a 95-trial special-case split would violate the matched protocol.",
+  "primary_confirmatory_subjects_after_qc": ["sub-02", "sub-03", "sub-04", "sub-05", "sub-06", "sub-07", "sub-08", "sub-09"],
+  "primary_n_after_qc": 8,
+  "secondary_analyzable_subjects": ["sub-01", "sub-02", "sub-03", "sub-04", "sub-05", "sub-06", "sub-07", "sub-08", "sub-09"],
+  "secondary_n_after_qc": 9,
+  "confirmatory_results_were_not_used_to_choose_the_exclusion_rule": true
+}

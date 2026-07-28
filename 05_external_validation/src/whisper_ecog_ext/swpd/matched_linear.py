@@ -197,7 +197,7 @@ def extract_one_block(
     _validate_targets(targets, neural.shape[0])
     ids = np.asarray(
         [
-            f"{PILOT_SUBJECT}:block-{block.index:02d}:frame-{frame:05d}"
+            f"{inventory.subject}:block-{block.index:02d}:frame-{frame:05d}"
             for frame in range(neural.shape[0])
         ],
         dtype="U48",
@@ -243,7 +243,7 @@ def save_block_cache(
     os.replace(temporary, arrays_path)
     payload = {
         "schema_version": 1,
-        "kind": "swpd_sub01_matched_linear_block_cache",
+        "kind": "swpd_matched_linear_block_cache",
         "extraction_fingerprint": extraction_fingerprint,
         "definition": asdict(block.definition),
         "arrays_file": arrays_path.name,
@@ -305,8 +305,12 @@ def build_extraction_fingerprint(
         {
             "schema_version": 1,
             "implementation": "swpd-matched-linear-block-v1",
-            "implementation_sha256": sha256_file(Path(__file__)),
-            "subject": PILOT_SUBJECT,
+            "implementation_files_sha256": {
+                "matched_linear.py": sha256_file(Path(__file__)),
+                "author_mel.py": sha256_file(Path(__file__).with_name("author_mel.py")),
+                "targets.py": sha256_file(Path(__file__).parents[1] / "targets.py"),
+            },
+            "subject": inventory.subject,
             "nwb_path": inventory.nwb_path,
             "nwb_size_bytes": inventory.nwb_size_bytes,
             "events_sha256": sha256_file(events_path),
@@ -435,6 +439,7 @@ def run_matched_folds(
     speech_intervals: Sequence[tuple[float, float]] | None = None,
     reducer_seed: int = 42,
     reduced_dimension: int = REDUCED_DIMENSION,
+    subject: str = PILOT_SUBJECT,
 ) -> dict[str, Any]:
     if len(blocks) != BLOCK_COUNT or tuple(block.definition.index for block in blocks) != tuple(range(BLOCK_COUNT)):
         raise ValueError("Matched analysis requires ordered blocks 0..4")
@@ -536,9 +541,9 @@ def run_matched_folds(
 
     summary: dict[str, Any] = {
         "schema_version": 1,
-        "kind": "swpd_sub01_matched_linear_development",
-        "subject": PILOT_SUBJECT,
-        "confirmatory_subjects_read": False,
+        "kind": "swpd_matched_linear_subject_result",
+        "subject": subject,
+        "confirmatory_subjects_read": subject != PILOT_SUBJECT,
         "target_dimension": reduced_dimension,
         "target_transform": f"fold-train StandardScaler + PCA{reduced_dimension} whitening",
         "neural_transform": f"shared fold-train StandardScaler + PCA{reduced_dimension} whitening",

@@ -1,8 +1,8 @@
-"""Read-only, lazy NWB access for the SWPD development subject.
+"""Read-only, lazy NWB access for SWPD.
 
-Only ``sub-01`` is intentionally accessible in this development module.  The
-confirmatory participants stay locked until the protocol and implementation
-are frozen.  The adapter reads NWB's HDF5 layout directly with h5py so an
+Public development helpers remain locked to ``sub-01``.  A separate frozen
+production runner must opt in explicitly before it can read confirmatory
+participants.  The adapter reads NWB's HDF5 layout directly with h5py so an
 inventory does not materialize the five-minute signals in memory.
 """
 
@@ -20,6 +20,7 @@ import numpy as np
 
 PILOT_SUBJECT = "sub-01"
 LOCKED_CONFIRMATORY_SUBJECTS = tuple(f"sub-{index:02d}" for index in range(2, 11))
+ALL_SUBJECTS = (PILOT_SUBJECT,) + LOCKED_CONFIRMATORY_SUBJECTS
 SUBJECT_RE = re.compile(r"^sub-\d{2}$")
 DATASET_DIRECTORY = "SingleWordProductionDutch-iBIDS"
 
@@ -191,6 +192,11 @@ def assert_pilot_subject(subject: str) -> None:
         )
 
 
+def assert_known_subject(subject: str) -> None:
+    if not SUBJECT_RE.fullmatch(subject) or subject not in ALL_SUBJECTS:
+        raise ValueError(f"Invalid SWPD subject identifier: {subject!r}")
+
+
 def resolve_dataset_root(data_root: Path) -> Path:
     supplied = data_root.expanduser().resolve()
     candidates = (supplied, supplied / DATASET_DIRECTORY)
@@ -202,8 +208,12 @@ def resolve_dataset_root(data_root: Path) -> Path:
     )
 
 
-def subject_paths(data_root: Path, subject: str = PILOT_SUBJECT) -> dict[str, Path]:
-    assert_pilot_subject(subject)
+def _subject_paths(
+    data_root: Path, subject: str, *, allow_confirmatory: bool
+) -> dict[str, Path]:
+    assert_known_subject(subject)
+    if not allow_confirmatory:
+        assert_pilot_subject(subject)
     root = resolve_dataset_root(data_root)
     ieeg_dir = root / subject / "ieeg"
     prefix = f"{subject}_task-wordProduction"
@@ -217,6 +227,18 @@ def subject_paths(data_root: Path, subject: str = PILOT_SUBJECT) -> dict[str, Pa
     if missing:
         raise FileNotFoundError(f"Missing {subject} files: {missing} below {ieeg_dir}")
     return paths
+
+
+def subject_paths(data_root: Path, subject: str = PILOT_SUBJECT) -> dict[str, Path]:
+    """Development-safe path resolver; confirmatory subjects remain locked."""
+
+    return _subject_paths(data_root, subject, allow_confirmatory=False)
+
+
+def subject_paths_frozen(data_root: Path, subject: str) -> dict[str, Path]:
+    """Path resolver reserved for a separately frozen production runner."""
+
+    return _subject_paths(data_root, subject, allow_confirmatory=True)
 
 
 def _text(value: Any) -> str:
@@ -234,6 +256,46 @@ def _scalar(dataset: h5py.Dataset) -> float:
     return float(value)
 
 
+def _robust_timestamp_rate(name: str, timestamps: h5py.Dataset) -> float:
+    """Estimate a nominal rate without trusting one potentially bad interval.
+
+    The released SWPD timestamps contain sparse clock glitches.  In sub-07 the
+    very first iEEG interval spans about five nominal samples, although the
+    following samples and the full recording are on the 1024 Hz grid.  Using
+    only timestamps[1] - timestamps[0] therefore invents a 204.55 Hz rate and
+    makes the fixed 70--170 Hz high-gamma filter invalid.
+
+    A median of positive deltas recovers the nominal grid while the quality
+    gates below still reject genuinely irregular or malformed time axes.  The
+    bounded prefix keeps inventory read-only and cheap for the 14M-sample audio
+    series.
+    """
+
+    sample_count = min(len(timestamps), 10_001)
+    values = np.asarray(timestamps[:sample_count], dtype=np.float64)
+    deltas = np.diff(values)
+    finite_positive = np.isfinite(deltas) & (deltas > 0)
+    positive_fraction = float(np.mean(finite_positive))
+    if positive_fraction < 0.90:
+        raise NWBLayoutError(
+            f"acquisition/{name} timestamps are not predominantly increasing "
+            f"({positive_fraction:.1%} positive deltas)"
+        )
+    positive = deltas[finite_positive]
+    median_delta = float(np.median(positive))
+    if not np.isfinite(median_delta) or median_delta <= 0:
+        raise NWBLayoutError(f"acquisition/{name} has invalid timestamp spacing")
+    close_fraction = float(
+        np.mean(np.abs(positive - median_delta) <= 0.05 * median_delta)
+    )
+    if close_fraction < 0.90:
+        raise NWBLayoutError(
+            f"acquisition/{name} timestamps have no stable nominal grid "
+            f"({close_fraction:.1%} within 5% of the median interval)"
+        )
+    return 1.0 / median_delta
+
+
 def _series_inventory(name: str, group: h5py.Group) -> SeriesInventory:
     if "data" not in group or not isinstance(group["data"], h5py.Dataset):
         raise NWBLayoutError(f"acquisition/{name}/data is missing")
@@ -247,13 +309,11 @@ def _series_inventory(name: str, group: h5py.Group) -> SeriesInventory:
         if not isinstance(timestamps, h5py.Dataset) or len(timestamps) < 2:
             raise NWBLayoutError(f"acquisition/{name}/timestamps is too short")
         first = float(timestamps[0])
-        second = float(timestamps[1])
-        delta = second - first
-        if not np.isfinite(delta) or delta <= 0:
-            raise NWBLayoutError(f"acquisition/{name} has invalid timestamps")
-        rate = 1.0 / delta
+        if not np.isfinite(first):
+            raise NWBLayoutError(f"acquisition/{name} has an invalid first timestamp")
+        rate = _robust_timestamp_rate(name, timestamps)
         start = first
-        timing_source = "timestamps"
+        timing_source = "timestamps.median_positive_delta"
     elif "starting_time" in group:
         starting_time = group["starting_time"]
         if not isinstance(starting_time, h5py.Dataset):
@@ -292,15 +352,19 @@ def _read_tsv(path: Path) -> list[dict[str, str]]:
         return list(csv.DictReader(handle, delimiter="\t"))
 
 
-def load_visual_word_events(data_root: Path) -> tuple[VisualWordEvent, ...]:
-    """Return the 100 visual cue events for sub-01 without opening signal data."""
+def load_visual_word_events_subject(
+    data_root: Path, subject: str, *, allow_confirmatory: bool = False
+) -> tuple[VisualWordEvent, ...]:
+    """Return one subject's visual cues; these are not acoustic onsets."""
 
-    paths = subject_paths(data_root, PILOT_SUBJECT)
+    paths = _subject_paths(
+        data_root, subject, allow_confirmatory=allow_confirmatory
+    )
     rows = _read_tsv(paths["events"])
     selected = [row for row in rows if row.get("trial_type") == "word"]
     events = tuple(
         VisualWordEvent(
-            trial_id=f"{PILOT_SUBJECT}:trial-{index:03d}",
+            trial_id=f"{subject}:trial-{index:03d}",
             trial_index=index,
             onset_seconds=float(row["onset"]),
             duration_seconds=float(row["duration"]),
@@ -309,22 +373,40 @@ def load_visual_word_events(data_root: Path) -> tuple[VisualWordEvent, ...]:
         for index, row in enumerate(selected)
     )
     if len(events) != 100:
-        raise NWBLayoutError(f"Expected 100 sub-01 visual word events, found {len(events)}")
+        raise NWBLayoutError(f"Expected 100 {subject} visual word events, found {len(events)}")
     onsets = np.asarray([event.onset_seconds for event in events])
     if not np.all(np.isfinite(onsets)) or np.any(np.diff(onsets) <= 0):
         raise NWBLayoutError("Visual word-event onsets must be finite and increasing")
     if len({event.prompt for event in events}) != 100:
-        raise NWBLayoutError("sub-01 must contain 100 unique visual word prompts")
+        raise NWBLayoutError(f"{subject} must contain 100 unique visual word prompts")
     return events
+
+
+def load_visual_word_events(data_root: Path) -> tuple[VisualWordEvent, ...]:
+    """Development-safe visual cues for sub-01."""
+
+    return load_visual_word_events_subject(
+        data_root, PILOT_SUBJECT, allow_confirmatory=False
+    )
 
 
 class SWPDRecording:
     """Context-managed, read-only view of one SWPD pilot NWB file."""
 
-    def __init__(self, data_root: Path, subject: str = PILOT_SUBJECT):
-        assert_pilot_subject(subject)
+    def __init__(
+        self,
+        data_root: Path,
+        subject: str = PILOT_SUBJECT,
+        *,
+        allow_confirmatory: bool = False,
+    ):
+        assert_known_subject(subject)
+        if not allow_confirmatory:
+            assert_pilot_subject(subject)
         self.subject = subject
-        self.paths = subject_paths(data_root, subject)
+        self.paths = _subject_paths(
+            data_root, subject, allow_confirmatory=allow_confirmatory
+        )
         self._file: h5py.File | None = None
 
     def __enter__(self) -> "SWPDRecording":
@@ -445,14 +527,20 @@ class SWPDRecording:
         )
 
 
-def inventory_pilot(data_root: Path) -> SWPDInventory:
-    paths = subject_paths(data_root, PILOT_SUBJECT)
+def inventory_subject(
+    data_root: Path, subject: str, *, allow_confirmatory: bool = False
+) -> SWPDInventory:
+    paths = _subject_paths(
+        data_root, subject, allow_confirmatory=allow_confirmatory
+    )
     before = {
         name: (path.stat().st_size, path.stat().st_mtime_ns)
         for name, path in paths.items()
         if name != "root"
     }
-    with SWPDRecording(data_root, PILOT_SUBJECT) as recording:
+    with SWPDRecording(
+        data_root, subject, allow_confirmatory=allow_confirmatory
+    ) as recording:
         result = recording.inventory()
     after = {
         name: (path.stat().st_size, path.stat().st_mtime_ns)
@@ -462,3 +550,7 @@ def inventory_pilot(data_root: Path) -> SWPDInventory:
     if before != after:
         raise RuntimeError("A raw SWPD file changed during read-only inventory")
     return result
+
+
+def inventory_pilot(data_root: Path) -> SWPDInventory:
+    return inventory_subject(data_root, PILOT_SUBJECT, allow_confirmatory=False)

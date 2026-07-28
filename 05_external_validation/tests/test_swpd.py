@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 from pathlib import Path
+import shutil
 import sys
 import tempfile
 import unittest
@@ -17,6 +18,11 @@ sys.path.insert(0, str(MODULE_ROOT))
 sys.path.insert(0, str(MODULE_ROOT / "src"))
 
 import swpd_download  # noqa: E402
+from swpd_matched_linear import (  # noqa: E402
+    DEFAULT_PROTOCOL_CONFIG,
+    load_protocol_config,
+    validate_protocol_payload,
+)
 from whisper_ecog_ext.swpd.author_mel import (  # noqa: E402
     extract_author_log_mel,
     extract_features_from_pilot,
@@ -34,6 +40,7 @@ from whisper_ecog_ext.swpd.nwb import (  # noqa: E402
     recording_relative_sample_bounds,
     recording_relative_to_series_time,
     subject_paths,
+    subject_paths_frozen,
 )
 from whisper_ecog_ext.swpd.matched_linear import (  # noqa: E402
     MatchedBlock,
@@ -240,6 +247,20 @@ class SWPDReadOnlyInventoryTests(unittest.TestCase):
             with self.assertRaises(ConfirmatoryDataLocked):
                 subject_paths(Path(temporary), "sub-02")
 
+    def test_frozen_path_resolver_requires_separate_explicit_api(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = _make_synthetic_swpd(Path(temporary))
+            source = root / "sub-01"
+            destination = root / "sub-02"
+            shutil.copytree(source, destination)
+            ieeg = destination / "ieeg"
+            for path in list(ieeg.iterdir()):
+                path.rename(ieeg / path.name.replace("sub-01", "sub-02"))
+            with self.assertRaises(ConfirmatoryDataLocked):
+                subject_paths(root, "sub-02")
+            resolved = subject_paths_frozen(root, "sub-02")
+            self.assertEqual(resolved["nwb"].name, "sub-02_task-wordProduction_ieeg.nwb")
+
     def test_synthetic_nwb_inventory_and_lazy_slices(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = _make_synthetic_swpd(Path(temporary))
@@ -260,6 +281,31 @@ class SWPDReadOnlyInventoryTests(unittest.TestCase):
                 audio = recording.read_audio(100, 130)
             self.assertEqual(neural.shape, (20, 2))
             self.assertEqual(audio.shape, (30,))
+
+    def test_timestamp_rate_ignores_anomalous_first_interval(self) -> None:
+        """Regression test for the released sub-07 timestamp anomaly."""
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = _make_synthetic_swpd(Path(temporary))
+            nwb_path = root / "sub-01" / "ieeg" / "sub-01_task-wordProduction_ieeg.nwb"
+            with h5py.File(nwb_path, "r+") as handle:
+                for name in ("iEEG", "Stimulus"):
+                    group = handle["acquisition"][name]
+                    count = int(group["data"].shape[0])
+                    del group["starting_time"]
+                    timestamps = np.arange(count, dtype=np.float64) / 1024.0
+                    # The first gap spans five nominal samples, as in sub-07;
+                    # all later deltas still describe the 1024 Hz sample grid.
+                    timestamps[1:] += 4.0 / 1024.0
+                    group.create_dataset("timestamps", data=timestamps)
+
+            inventory = inventory_pilot(root)
+            self.assertEqual(inventory.ieeg.rate_hz, 1024.0)
+            self.assertEqual(inventory.stimulus.rate_hz, 1024.0)
+            self.assertEqual(
+                inventory.ieeg.timing_source,
+                "timestamps.median_positive_delta",
+            )
 
     def test_end_to_end_feature_extraction_from_synthetic_nwb(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -336,6 +382,20 @@ class _FakeWhisperL345:
 
 
 class MatchedLinearTests(unittest.TestCase):
+    def test_frozen_protocol_enforces_matched_pca50_contract(self) -> None:
+        payload = load_protocol_config(DEFAULT_PROTOCOL_CONFIG, verify_baseline=False)
+        self.assertEqual(
+            payload["matched_comparison"]["targets"],
+            ["mel80", "L3", "L4", "L5"],
+        )
+        self.assertEqual(
+            payload["matched_comparison"]["common_target_dimension"], 50
+        )
+        mutated = json.loads(json.dumps(payload))
+        mutated["matched_comparison"]["target_transform"]["fit_scope"] = "all_data"
+        with self.assertRaisesRegex(ValueError, "train-only"):
+            validate_protocol_payload(mutated)
+
     def test_large_absolute_acquisition_clock_is_not_mixed_with_relative_events(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = _make_synthetic_swpd(

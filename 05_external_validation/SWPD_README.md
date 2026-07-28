@@ -120,6 +120,40 @@ filtering within each block and Whisper targets are bidirectional within their
 30-second chunk. It is a representation comparison, not an online asynchronous
 claim.
 
+### Frozen all-subject matched PCA50 run
+
+The separate production queue applies the frozen matched protocol to the ten
+planned participants. `sub-01` is retained only in a secondary descriptive table.
+The official `sub-10` recording ends after 95 valid word trials, so it is excluded
+by a checksummed post-access source-QC amendment without imputation. The primary
+confirmatory cohort is therefore `sub-02..sub-09` (`n=8 patients`). Holm correction
+is applied across the three predeclared L3/L4/L5-minus-MEL80 contrasts.
+
+```powershell
+.\scripts\start_swpd_all_matched_background.ps1
+
+.\scripts\watch_background_run.ps1 `
+  -LauncherReceipt "C:\WhisperECoG_Work\SWPD\runs\matched_pca50_all_v2\launcher\launcher.json" `
+  -Follow
+```
+
+The queue is sequential and resumable. Completed subject receipts and summary
+checksums are verified before reuse. A failed subject receives a new immutable
+attempt directory; finished caches and subjects are not overwritten. `Ctrl+C`
+in the watcher does not stop the background experiment.
+
+After `sub-01..sub-09` are complete and the known incomplete `sub-10` source is
+rejected, finalize the QC-adjusted result:
+
+```powershell
+.\.venv\Scripts\python.exe .\swpd_finalize_qc.py `
+  --data-root "C:\WhisperECoG\SWPD\extracted" `
+  --run-root "C:\WhisperECoG_Work\SWPD\runs\matched_pca50_all_v2"
+```
+
+The publication-ready metrics, figures and independent audit are in
+[`swpd_matched_pca50/`](swpd_matched_pca50/README.md).
+
 ## 6. Full-neural `sub-01` regression pilot
 
 The production pilot trains the common `OneSecondEcogEncoder` from scratch on

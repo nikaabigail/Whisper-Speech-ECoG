@@ -240,3 +240,141 @@ same config/commit; it is not a separate pilot.
   JSON parsing, Windows PowerShell parsing, OOF CLI, private-path/secret scan, and
   large/private-payload scan passed. Heavy SWPD/VocalMind production was not
   started by the release audit.
+
+## 2026-07-28 — SWPD sub-01 seed4_v2 result freeze
+
+- Completed the development-only full-neural regression run at
+  `C:\WhisperECoG_Work\SWPD\runs\seed4_v2`. The immutable primary summary SHA-256
+  is `2fab4111d4d868a3204a88768b42b8758271637aa8745a066cc01aa0ead10052`.
+- The held-out block contains 58,062 frames. Training blocks were 1/2/3,
+  validation block 0, and test block 4. No confirmatory participant was read.
+- The production JSON reports the fixed three-initialization MEL control as
+  `r=0.0167993` and standardized MSE `1.142776` in whitened PCA-50 coordinates.
+  L3/L4/L5 PCA-coordinate correlations were approximately `0.01238`, `0.01905`,
+  and `0.01510`.
+- A read-only post-hoc diagnostic inverted the fixed train-only PCA transform and
+  evaluated the saved predictions against untouched raw held-out MEL80 targets.
+  The fixed MEL x3 mean correlation in original MEL coordinates was `r=0.46522`
+  (Fisher mean `0.46603`, median component `0.47808`, 80/80 components positive).
+  This is the appropriate directional comparison surface for the published raw
+  acoustic-coordinate baseline, but it is not promoted to a preregistered primary
+  result after test access.
+- Exact forward-transform reconstruction agreed within approximately `5e-7`, and
+  a -1000 to +1000 ms lag scan peaked at -50 ms (`r=0.469219`) versus zero-lag
+  `r=0.465216`. This excludes a gross one-second alignment or sample-order defect;
+  the small lag observation was not used to retune the held-out model.
+- The exact modernized SWPD-author MEL/OLS development reference remains
+  `r=0.5199771` under its different 10-fold/23-bin/high-gamma protocol. Its result
+  JSON SHA-256 is
+  `4f02fbedbceb59ac8a154b8482f439fc8ebf8cf3d7283455a50cbe0708e25d24`.
+- Synchronous word classification, human-audited asynchronous event evaluation,
+  and the fixed L3+L4+L5 event ensemble remain unevaluated and gated.
+- Machine-readable frozen record:
+  `results_records/swpd_sub01_development_seed4_v2_20260728.json`.
+
+## 2026-07-28 — Podcast ECoG publication V2 closure
+
+- Completed and validated all nine patients under protocol
+  `paper_exact_batched_v2`; no requested patient is missing.
+- Primary subject-level metric was fixed as held-out mean Pearson `r` in the
+  `0–500 ms` response window. Author spectral 160D was `0.007950 ± 0.010820 SD`;
+  Whisper L3/L4/L5 were `0.022994/0.022476/0.021244`; fixed L3+L4+L5 was
+  `0.024381 ± 0.011489 SD` (`n=9`).
+- Fixed L3+L4+L5 minus author spectral was `+0.016431 ± 0.011855 SD`, 95% t-CI
+  `[+0.007318,+0.025543]`, wins `9/9`, paired two-sided `p=0.003174`.
+- The train-only PCA160 dimensionality-matched ensemble also exceeded author
+  spectral by `+0.014541`, 95% t-CI `[+0.004155,+0.024927]`, wins `9/9`,
+  `p=0.012081`. Full 512D versus PCA160 was not significant (`p=0.110102`).
+- The fixed ensemble did not exceed the best single Whisper layer on the peak
+  surface (`4/9` wins, mean delta `-0.000203`, `p=0.706267`). The supported claim
+  is therefore Whisper-versus-author representation improvement, not a proven
+  ensemble-versus-best-layer improvement.
+- V1 and V2 ensemble means were nearly identical (`0.024383` and `0.024381`). V2
+  is the primary publication surface; V1 remains a reproducibility check.
+- Source summary SHA-256:
+  `b21c413c88a2ac4a318803b687523fbe98d6b3789f0539cc353aca7b80746a9f`.
+- Machine-readable frozen record:
+  `results_records/podcast_ecog_v2_20260728.json`.
+
+## 2026-07-28 — SWPD source-paper re-read
+
+- Re-read and visually inspected Verwoert et al., Scientific Data 9:434,
+  `s41597-022-01542-9`. This is the source paper for the already-used SWPD data,
+  not an additional external dataset.
+- The official validation is 70–170 Hz Hilbert high-gamma, nine neural contexts
+  from -200 to +200 ms, train-only neural PCA50, OLS to raw 23-bin log-MEL, and
+  non-shuffled 10-fold frame CV. It is not word classification or asynchronous
+  event decoding.
+- The paper reports approximately `r=0.5–0.86` across patients in Fig. 4 and
+  explicitly states that the score is driven mainly by speech-versus-silence.
+- Our exact-modernized author baseline for `sub-01`, `r=0.5199771`, agrees with
+  the approximately 0.52 first bar and closes the basic data/alignment
+  reproduction check.
+- Our neural `seed4_v2` uses a different architecture, target space and stricter
+  block split; its PCA-space Whisper correlations must not be compared directly
+  to the paper's raw-MEL correlation.
+
+## 2026-07-28 — SWPD sub-01 frozen matched PCA50 comparison
+
+- Preserved the exact-modernized author MEL23/OLS result as a separate
+  reproducibility control (`r=0.5199771`); the runner verifies its immutable
+  SHA-256 before fitting the matched experiment.
+- Froze `configs/experiments/swpd_sub01_matched_pca50_v1.json`: targets
+  MEL80/L3/L4/L5, shared frame IDs and five block folds, train-only standardized
+  PCA50 whitening for neural and targets, identical OLS decoder, and one
+  Fisher-pooled component-correlation metric. A protocol validator fails closed
+  on all of these fields.
+- Completed all five folds at
+  `C:\WhisperECoG_Work\SWPD\runs\matched_pca50_sub01_v1`. Only `sub-01` was read;
+  `sub-02…sub-10` remained code-locked.
+- Aggregate all-frame test results, mean ± fold SD:
+  MEL80 `r=0.01518±0.00589`, MSE `1.05106±0.05402`; L3
+  `r=0.04283±0.01082`, MSE `0.89878±0.02322`; L4 `r=0.03446±0.00600`, MSE
+  `0.91971±0.03179`; L5 `r=0.03691±0.00462`, MSE `0.87669±0.02880`.
+- Fold-paired correlation deltas versus MEL80 were positive in every fold: L3
+  `+0.02765±0.00635` (`5/5`), L4 `+0.01928±0.00267` (`5/5`), L5
+  `+0.02173±0.00412` (`5/5`). These are descriptive temporal-fold results for
+  one participant, not population inference.
+- L3/L4/L5 PCA coordinates were not averaged into an ensemble because each
+  train-only reducer defines a different basis. An ensemble requires a common
+  downstream surface or prediction combination after inverse/defined mapping.
+- Full suite: `96/96` passed. Independent artifact validation confirmed 14,515
+  unique test rows, identical target test IDs, PCA50 train-only receipts, and
+  finite arrays.
+- Summary SHA-256:
+  `c71e4f9c1ed999f80b5e158913e21aa5566be554ff4803256e18d5c9edde7b1e`.
+- Machine-readable frozen record:
+  `results_records/swpd_sub01_matched_pca50_v1_20260728.json`.
+
+## 2026-07-28 — SWPD confirmatory matched PCA50 closure with data-QC exclusion
+
+- The frozen all-subject queue completed `sub-01` through `sub-09`. The robust
+  timestamp-rate estimator correctly recovered 1024 Hz for `sub-07`, whose first
+  timestamp interval spans about five nominal samples; the old first-difference
+  estimator had incorrectly reported 204.55 Hz.
+- The official `sub-10` source recording is incomplete. Its events table contains
+  100 word rows but only 95 positive-duration trials. The final five word rows have
+  zero duration and all point to sample 291899, which is the final sample of the
+  291900-sample iEEG recording. No missing neural/audio segment can be reconstructed.
+- `sub-10` was therefore excluded in a post-access data-QC amendment. No values were
+  imputed and no participant-specific 95-trial split was introduced. The original
+  frozen protocol remains unchanged; the amendment is
+  `configs/experiments/swpd_all_matched_pca50_v1_qc_amendment_sub10.json`.
+- Primary population inference excludes development subject `sub-01` and uses
+  `sub-02` through `sub-09` (`n=8`). The secondary analyzable cohort is
+  `sub-01` through `sub-09` (`n=9`).
+- Primary subject-level Fisher-pooled correlations (mean ± SD; 95% t-CI) were:
+  MEL80 `0.02388 ± 0.00956` `[0.01588, 0.03187]`; L3
+  `0.05327 ± 0.01828` `[0.03799, 0.06856]`; L4 `0.05397 ± 0.01726`
+  `[0.03954, 0.06840]`; L5 `0.05522 ± 0.01685` `[0.04113, 0.06930]`.
+- Whisper-minus-MEL80 deltas were positive in every confirmatory patient: L3
+  `+0.02940 ± 0.00891`, L4 `+0.03009 ± 0.00793`, L5
+  `+0.03134 ± 0.00743`, each `8/8` wins. Holm-adjusted paired-test p-values were
+  `3.37e-5`, `2.67e-5`, and `1.98e-5`, respectively.
+- This supports a matched Whisper-representation advantage over MEL80. It does not
+  constitute an L3+L4+L5 ensemble result because the layer-specific train-only PCA
+  coordinate systems are not aligned.
+- Final external summary SHA-256:
+  `5c6fa8cbcedaf81867e11f77aafd502779190e5fb3abc4aa6ab333bb6424f3f6`.
+- Machine-readable frozen record:
+  `results_records/swpd_matched_pca50_confirmatory_qc_v2_20260728.json`.

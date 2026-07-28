@@ -1,66 +1,81 @@
-# External validation on two public invasive-speech datasets
+# External validation: SWPD and VocalMind
 
-This directory is a new, self-contained validation track. It does not change the
-historical Ivanova/Procenko pipelines or reuse their patient-specific weights.
+Отдельный трек внешней валидации, не изменяющий исторические пайплайны
+Ivanova/Procenko и не использующий их patient-specific веса.
 
-The two-computer design is:
+[SWPD matched PCA50 — результаты, графики и аудит](swpd_matched_pca50/README.md) ·
+[SWPD setup](SWPD_README.md) ·
+[VocalMind runbook](VOCALMIND_PRIMARY_RUNBOOK.md) ·
+[Общий протокол](PROTOCOL_DRAFT.md) ·
+[Лабораторный журнал](LAB_JOURNAL.md)
 
-| Host | Dataset | Primary role |
+## Текущий статус
+
+| Dataset | Постановка | Статус |
 |---|---|---|
-| RTX 5070 laptop | SingleWordProductionDutch (SWPD) | 10-patient neural-to-acoustic reconstruction and true continuous speech-event detection |
-| RTX 3060 Ti-class desktop | VocalMind | repeated 20-class Mandarin word decoding and fixed L3+L4+L5 ensemble |
+| SWPD | Matched MEL80 vs Whisper L3/L4/L5, train-only PCA50 + OLS | **Завершено: primary n=8** |
+| VocalMind | Повторяемое Mandarin word decoding на второй системе | Выполняется отдельно; результаты этого компьютера не подменяют внешний run |
 
-Both hosts use the same code commit, frozen `openai/whisper-base`, layers L3/L4/L5,
-one-second neural context, train-only transforms, test gate, and equal-weight
-probability ensemble. Dataset-specific adapters and downstream heads are different
-because the datasets support different scientific questions.
+## SWPD: зафиксированный результат
+
+![SWPD matched result](swpd_matched_pca50/figure_00_main_summary.png)
+
+| Система | Correlation, mean ± SD | 95% t-CI |
+|---|---:|---:|
+| MEL80 | 0,02388 ± 0,00956 | [0,01588; 0,03187] |
+| Whisper L3 | 0,05327 ± 0,01828 | [0,03799; 0,06856] |
+| Whisper L4 | 0,05397 ± 0,01726 | [0,03954; 0,06840] |
+| Whisper L5 | **0,05522 ± 0,01685** | **[0,04113; 0,06930]** |
+
+L3/L4/L5 превысили MEL80 у всех `8/8` confirmatory пациентов. Все три
+предзаданных сравнения остаются значимыми после Holm correction.
+
+Полный разбор: [swpd_matched_pca50](swpd_matched_pca50/README.md).
 
 ## Scientific guardrails
 
-- SWPD has 100 unique words per subject and therefore is **not** used for ordinary
-  within-subject 100-class word classification.
-- Visual cue timestamps are not acoustic speech onsets. Continuous labels must be
-  derived independently from audio and manually audited.
-- VocalMind is trialized, so it is not presented as a free-running asynchronous test.
-- L3+L4+L5 is fixed before external test access; no subset search is allowed.
-- Test thresholds and the `Recall ~= 0.40` operating point are selected on validation.
-- Patient, not optimizer seed or frame, is the biological statistical unit.
+- SWPD имеет 100 уникальных слов на участника и не используется как обычная
+  within-subject 100-class классификация.
+- Visual cue timestamps задают только границы temporal blocks и не называются
+  акустическими началами слов.
+- Primary SWPD metric — all-frame representation predictability, не word accuracy.
+- High-gamma и Whisper targets офлайн/некаузальны; SWPD-результат не является
+  real-time или asynchronous decoder.
+- L3/L4/L5 имеют отдельные train-only PCA bases, поэтому прямое усреднение их
+  PCA-координат не объявляется ансамблем.
+- Patient, а не frame, fold или optimizer seed, является статистической единицей.
+- `sub-01` исключён из primary inference как development subject.
+- `sub-10` исключён по source-only QC: официальная запись заканчивается после
+  95 валидных trials. Решение, контрольные суммы и отсутствие модели для него
+  сохранены отдельно.
 
-The frozen v1 analysis contract is in [PROTOCOL_DRAFT.md](PROTOCOL_DRAFT.md). The
-filename is retained for stable links; its contents and the production config are
-bound to the exact clean Git commit used for a run.
-The two-machine installation and launch sequence is written in Russian in
-[RUNBOOK_RU.md](RUNBOOK_RU.md). Real-data checks, decisions, and bugs caught before
-launch are recorded chronologically in [LAB_JOURNAL.md](LAB_JOURNAL.md).
+## Что публикуется
 
-## Clean Windows 11 setup
+- read-only adapters и код extraction/training/evaluation;
+- frozen configs и QC amendment;
+- агрегированные JSON/CSV и PNG/SVG;
+- машинно-проверяемые receipts и аудит;
+- Windows 11 bootstrap/run scripts.
 
-After cloning the repository, open PowerShell in this directory.
+Не публикуются исходные записи, производные массивы, caches, checkpoints, логи,
+локальные пути к данным и чувствительные метаданные.
 
-```powershell
-Set-ExecutionPolicy -Scope Process Bypass
-.\scripts\bootstrap_windows.ps1 -Dataset vocalmind -DataRoot "D:\WhisperECoG\data" -InstallSystemTools
-```
+## Windows 11 setup
 
-For the current SWPD host:
+После клонирования откройте PowerShell в этой папке.
 
 ```powershell
 Set-ExecutionPolicy -Scope Process Bypass
 .\scripts\bootstrap_windows.ps1 -Dataset swpd -DataRoot "C:\WhisperECoG\data"
 ```
 
-The bootstrap installs Python 3.10/Git only when requested, creates an isolated
-virtual environment, installs the CUDA 12.8 PyTorch wheel, and executes a real GPU
-forward/backward check. A standalone CUDA Toolkit is not required.
+Для VocalMind на отдельной системе:
 
-The required order is:
+```powershell
+Set-ExecutionPolicy -Scope Process Bypass
+.\scripts\bootstrap_windows.ps1 -Dataset vocalmind -DataRoot "D:\WhisperECoG\data" -InstallSystemTools
+```
 
-1. download plus checksum verification;
-2. read-only dataset inventory;
-3. author-MEL fidelity check;
-4. rep6-only non-metric GPU smoke;
-5. checkout the published protocol-freeze commit with a clean worktree;
-6. run all five VocalMind folds and all five seeds inside one immutable output root.
-
-SWPD `sub-02`–`sub-10` are not opened by this release. They require a separate
-confirmatory runner after the `sub-01` development and speech-boundary audits.
+Точный порядок подготовки данных и запуска описан в [RUNBOOK_RU.md](RUNBOOK_RU.md).
+Разработческие решения и обнаруженные дефекты записаны в
+[LAB_JOURNAL.md](LAB_JOURNAL.md).

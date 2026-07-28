@@ -15,6 +15,13 @@ if ($null -eq $Process) {
 Write-Host "Started UTC: $($Receipt.started_utc)"
 Write-Host "Main log:   $($Receipt.stdout)"
 Write-Host "Error log:  $($Receipt.stderr)"
+$QueueStatePath = Join-Path ([string]$Receipt.output_root) 'queue_state.json'
+if (Test-Path -LiteralPath $QueueStatePath -PathType Leaf) {
+    $Queue = Get-Content -LiteralPath $QueueStatePath -Raw -Encoding UTF8 | ConvertFrom-Json
+    $CompletedCount = @($Queue.completed_subjects).Count
+    $RemainingCount = @($Queue.remaining_subjects).Count
+    Write-Host "Queue: status=$($Queue.status) | current=$($Queue.current_subject) | completed=$CompletedCount | remaining=$RemainingCount"
+}
 if (Test-Path -LiteralPath $Receipt.stderr -PathType Leaf) {
     Write-Host "--- recent stderr ---"
     Get-Content -LiteralPath $Receipt.stderr -Tail 40
