@@ -29,6 +29,13 @@ DISPLAY = {"mel80": "MEL80", "L3": "Whisper L3", "L4": "Whisper L4", "L5": "Whis
 COLORS = {"mel80": "#6B7280", "L3": "#0072B2", "L4": "#009E73", "L5": "#D55E00"}
 EXPECTED_FINAL_SHA256 = "5c6fa8cbcedaf81867e11f77aafd502779190e5fb3abc4aa6ab333bb6424f3f6"
 
+GROUPED_DISPLAY = {
+    "mel80": "MEL80\n(authors' target)",
+    "L3": "Whisper L3\n(ours)",
+    "L4": "Whisper L4\n(ours)",
+    "L5": "Whisper L5\n(ours)",
+}
+
 
 def _style() -> None:
     plt.rcParams.update(
@@ -47,6 +54,7 @@ def _style() -> None:
             "savefig.dpi": 300,
             "savefig.bbox": "tight",
             "svg.fonttype": "none",
+            "svg.hashsalt": "swpd_matched_pca50_publication_assets_v1",
         }
     )
 
@@ -66,6 +74,33 @@ def _rows(primary: Mapping[str, Any]) -> list[Mapping[str, Any]]:
 
 def _system_values(rows: Sequence[Mapping[str, Any]], system: str) -> np.ndarray:
     return np.asarray([row[system]["fisher_r"] for row in rows], dtype=np.float64)
+
+
+def _mark_method_groups(ax: plt.Axes, *, top: float) -> None:
+    """Make the reproduced authors' target and our replacement visually explicit."""
+    ax.axvspan(-0.5, 0.5, color=COLORS["mel80"], alpha=0.075, zorder=0)
+    ax.axvspan(0.5, 3.5, color=COLORS["L3"], alpha=0.045, zorder=0)
+    ax.axvline(0.5, color="#9CA3AF", linewidth=1.0, linestyle="--", zorder=1)
+    ax.text(
+        0,
+        top,
+        "AUTHORS' MEL TARGET\nreproduced control",
+        ha="center",
+        va="top",
+        fontsize=7.8,
+        color="#374151",
+        weight="bold",
+    )
+    ax.text(
+        2,
+        top,
+        "OUR WHISPER TARGETS\nproposed replacement",
+        ha="center",
+        va="top",
+        fontsize=7.8,
+        color="#075985",
+        weight="bold",
+    )
 
 
 def figure_system_performance(primary: Mapping[str, Any], output: Path) -> None:
@@ -102,18 +137,19 @@ def figure_system_performance(primary: Mapping[str, Any], output: Path) -> None:
             zorder=4,
         )
         ax.text(index, high + 0.0035, f"{mean:.3f}", ha="center", va="bottom", fontsize=8.5)
-    ax.set_xticks(range(len(SYSTEMS)), [DISPLAY[item] for item in SYSTEMS])
+    ax.set_xticks(range(len(SYSTEMS)), [GROUPED_DISPLAY[item] for item in SYSTEMS])
     ax.set_ylabel("Held-out component correlation (r)")
-    ax.set_title("Matched representation decoding across confirmatory patients")
-    ax.set_ylim(0.0, 0.095)
+    ax.set_title("Authors' MEL target versus our Whisper replacement")
+    ax.set_ylim(0.0, 0.105)
+    _mark_method_groups(ax, top=0.102)
     ax.grid(axis="y", color="#D1D5DB", linewidth=0.6, alpha=0.75)
     ax.text(
-        0.01,
-        0.98,
+        0.99,
+        0.02,
         "Points: patients (n=8)   Diamonds: mean   Bars: 95% t-CI",
         transform=ax.transAxes,
-        ha="left",
-        va="top",
+        ha="right",
+        va="bottom",
         fontsize=8.3,
         color="#374151",
     )
@@ -124,14 +160,22 @@ def figure_paired_patients(primary: Mapping[str, Any], output: Path) -> None:
     rows = _rows(primary)
     x = np.arange(len(SYSTEMS))
     fig, ax = plt.subplots(figsize=(7.2, 4.8), constrained_layout=True)
+    right_labels: list[tuple[float, str]] = []
     for row in rows:
         values = np.asarray([row[system]["fisher_r"] for system in SYSTEMS])
         ax.plot(x, values, color="#9CA3AF", linewidth=0.9, alpha=0.75, zorder=1)
         ax.scatter(x, values, color=[COLORS[item] for item in SYSTEMS], s=18, zorder=2)
+        right_labels.append((float(values[-1]), row["subject"].replace("sub-", "P")))
+
+    previous_y = -np.inf
+    for value, label in sorted(right_labels):
+        label_y = max(value, previous_y + 0.0027)
+        previous_y = label_y
+        ax.plot([x[-1] + 0.01, x[-1] + 0.06], [value, label_y], color="#9CA3AF", linewidth=0.6)
         ax.text(
-            x[-1] + 0.07,
-            values[-1],
-            row["subject"].replace("sub-", "P"),
+            x[-1] + 0.075,
+            label_y,
+            label,
             va="center",
             fontsize=7.5,
             color="#4B5563",
@@ -141,19 +185,20 @@ def figure_paired_patients(primary: Mapping[str, Any], output: Path) -> None:
     )
     ax.plot(x, means, color="#111827", linewidth=2.4, zorder=3)
     ax.scatter(x, means, marker="D", color="#111827", edgecolor="white", s=45, zorder=4)
-    ax.set_xticks(x, [DISPLAY[item] for item in SYSTEMS])
+    ax.set_xticks(x, [GROUPED_DISPLAY[item] for item in SYSTEMS])
     ax.set_xlim(-0.18, 3.43)
-    ax.set_ylim(0.0, 0.095)
+    ax.set_ylim(0.0, 0.105)
     ax.set_ylabel("Held-out component correlation (r)")
-    ax.set_title("Patient-level paired comparison")
+    ax.set_title("Every patient: authors' MEL target versus our Whisper targets")
+    _mark_method_groups(ax, top=0.102)
     ax.grid(axis="y", color="#D1D5DB", linewidth=0.6, alpha=0.75)
     ax.text(
-        0.01,
-        0.98,
+        0.99,
+        0.02,
         "Each line is one confirmatory patient; black diamonds show means",
         transform=ax.transAxes,
-        ha="left",
-        va="top",
+        ha="right",
+        va="bottom",
         fontsize=8.3,
         color="#374151",
     )
@@ -208,7 +253,7 @@ def figure_deltas(primary: Mapping[str, Any], output: Path) -> None:
     ax.axhline(0.0, color="#111827", linewidth=1.0)
     ax.set_xticks(range(3), [f"Whisper {item} − MEL80" for item in layers])
     ax.set_ylabel("Paired correlation difference (Δr)")
-    ax.set_title("Whisper advantage is consistent across patients")
+    ax.set_title("Our Whisper targets minus the reproduced authors' MEL target")
     ax.set_ylim(-0.005, 0.056)
     ax.grid(axis="y", color="#D1D5DB", linewidth=0.6, alpha=0.75)
     _save(fig, output, "figure_03_whisper_minus_mel")
@@ -338,10 +383,11 @@ def figure_summary_panel(primary: Mapping[str, Any], output: Path) -> None:
             linewidth=2,
         )
         ax.text(index, high + 0.003, f"{mean:.3f}", ha="center", fontsize=8.5)
-    ax.set_xticks(range(4), ["MEL80", "L3", "L4", "L5"])
-    ax.set_ylim(0, 0.085)
+    ax.set_xticks(range(4), [GROUPED_DISPLAY[item] for item in SYSTEMS])
+    ax.set_ylim(0, 0.105)
     ax.set_ylabel("Held-out component correlation (r)")
-    ax.set_title("A  System performance (mean, 95% CI)", loc="left")
+    ax.set_title("A  Authors' MEL target vs our Whisper targets", loc="left")
+    _mark_method_groups(ax, top=0.102)
     ax.grid(axis="y", color="#D1D5DB", linewidth=0.6)
 
     ax = axes[1]
@@ -352,9 +398,10 @@ def figure_summary_panel(primary: Mapping[str, Any], output: Path) -> None:
     means = [primary["systems"][item]["fisher_r"]["mean"] for item in SYSTEMS]
     ax.plot(range(4), means, color="#111827", linewidth=2.2)
     ax.scatter(range(4), means, marker="D", color="#111827", edgecolor="white", s=40)
-    ax.set_xticks(range(4), ["MEL80", "L3", "L4", "L5"])
-    ax.set_ylim(0, 0.085)
+    ax.set_xticks(range(4), [GROUPED_DISPLAY[item] for item in SYSTEMS])
+    ax.set_ylim(0, 0.105)
     ax.set_title("B  Paired confirmatory patients (n=8)", loc="left")
+    _mark_method_groups(ax, top=0.102)
     ax.grid(axis="y", color="#D1D5DB", linewidth=0.6)
     _save(fig, output, "figure_00_main_summary")
 
@@ -455,11 +502,11 @@ def write_tables(primary: Mapping[str, Any], output: Path) -> None:
 def write_captions(output: Path) -> None:
     text = """# Figure captions
 
-**Figure 1. Matched acoustic-representation decoding.** Each open circle is one confirmatory patient (sub-02 through sub-09). Diamonds show the patient mean and error bars show two-sided 95% t confidence intervals. Neural inputs, temporal splits, train-only PCA50 transforms, OLS decoder, and metric were identical across MEL80 and Whisper layers.
+**Figure 1. Matched acoustic-representation decoding.** Grey denotes the authors' MEL80 acoustic target reproduced by us as the control inside the matched pipeline; colored marks denote our Whisper L3/L4/L5 replacements. These are all recomputed results on SWPD, not a direct copy of a number from the source paper. Each open circle is one confirmatory patient (sub-02 through sub-09). Diamonds show the patient mean and error bars show two-sided 95% t confidence intervals. Neural inputs, temporal splits, train-only PCA50 transforms, OLS decoder, and metric were identical across MEL80 and Whisper layers.
 
-**Figure 2. Patient-level paired comparison.** Lines connect the four target representations within each patient. The black line and diamonds show patient means. The within-patient design isolates the target representation while holding the ECoG data and decoder protocol fixed.
+**Figure 2. Patient-level paired comparison.** The grey column is the reproduced authors' MEL80 target and the colored columns are our Whisper targets. Lines connect the four target representations within each patient. The black line and diamonds show patient means. The within-patient design isolates the target representation while holding the ECoG data and decoder protocol fixed.
 
-**Figure 3. Whisper-minus-MEL80 paired effects.** Points are patient-level differences. Diamonds and bars show mean differences and 95% t confidence intervals. Reported p-values are two-sided paired t-tests with Holm correction across the three predeclared layer-versus-MEL contrasts.
+**Figure 3. Our Whisper-minus-authors' MEL80 paired effects.** Points are patient-level differences between our Whisper target and the reproduced MEL80 control. Diamonds and bars show mean differences and 95% t confidence intervals. Reported p-values are two-sided paired t-tests with Holm correction across the three predeclared layer-versus-MEL contrasts.
 
 **Figure 4. Matched SWPD architecture.** ECoG high-gamma features and each acoustic target are reduced using fold-train-only standardized PCA50 transforms. A shared neural reducer and identical OLS decoder are used for all targets. Layer-specific PCA coordinates are not directly averaged, so this experiment does not define an L3+L4+L5 ensemble.
 
