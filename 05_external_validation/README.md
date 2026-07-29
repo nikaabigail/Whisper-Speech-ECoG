@@ -4,6 +4,7 @@
 Ivanova/Procenko и не использующий их patient-specific веса.
 
 [SWPD matched PCA50 — результаты, графики и аудит](swpd_matched_pca50/README.md) ·
+[SWPD learned bottlenecks — PCA, sRRR, CLIP и alternating](swpd_learned_bottleneck/README.md) ·
 [SWPD setup](SWPD_README.md) ·
 [VocalMind runbook](VOCALMIND_PRIMARY_RUNBOOK.md) ·
 [Общий протокол](PROTOCOL_DRAFT.md) ·
@@ -14,6 +15,7 @@ Ivanova/Procenko и не использующий их patient-specific веса
 | Dataset | Постановка | Статус |
 |---|---|---|
 | SWPD | Matched MEL80 vs Whisper L3/L4/L5, train-only PCA50 + OLS | **Завершено: primary n=8** |
+| SWPD `sub-01` follow-up | PCA50 против sRRR50, CLIP50 и alternating50 на общей MEL80-поверхности | **Завершено: PCA50 сохранён, learned bottlenecks не дали прибавки** |
 | VocalMind | Повторяемое Mandarin word decoding на второй системе | Выполняется отдельно; результаты этого компьютера не подменяют внешний run |
 
 ## SWPD: зафиксированный результат

@@ -16,6 +16,7 @@
 [Архитектура](docs/ARCHITECTURE.md) ·
 [Внешняя валидация](05_external_validation/README.md) ·
 [SWPD: MEL vs Whisper](05_external_validation/swpd_matched_pca50/README.md) ·
+[SWPD: learned bottlenecks](05_external_validation/swpd_learned_bottleneck/README.md) ·
 [Происхождение](docs/PROVENANCE.md) ·
 [Чек-лист публикации](docs/PUBLISHING_CHECKLIST.md)
 
@@ -31,6 +32,7 @@
 | 4. Whisper async | Скользящее декодирование без подсказки о начале слова | [04_whisper_async](04_whisper_async/README.md) |
 | 5. External validation | Новый leakage-controlled MEL/Whisper L3/L4/L5 пайплайн для SWPD и VocalMind | [05_external_validation](05_external_validation/README.md) |
 | 5a. SWPD matched PCA50 | Завершённое patient-level сравнение MEL80 против Whisper L3/L4/L5 | [SWPD results, figures and audit](05_external_validation/swpd_matched_pca50/README.md) |
+| 5b. SWPD learned bottlenecks | Development-only проверка supervised RRR50, CLIP50 и alternating50 на `sub-01` | [Code, figures and frozen decisions](05_external_validation/swpd_learned_bottleneck/README.md) |
 | Результаты | Таблицы, определения метрик и графики | [results](results/README.md) |
 | Веса | Ожидаемая структура и правила целостности | [checkpoints](checkpoints/README.md) |
 
