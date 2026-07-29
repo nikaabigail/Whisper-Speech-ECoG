@@ -5,6 +5,7 @@
 *.md text eol=lf
 *.json text eol=lf
 *.csv text eol=lf
+*.svg text eol=lf
 *.txt text eol=lf
 *.yml text eol=lf
 *.yaml text eol=lf

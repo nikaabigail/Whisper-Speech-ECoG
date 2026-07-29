@@ -69,6 +69,7 @@ datasets/
 # Curated, aggregate-only SWPD publication tables are explicitly reviewed and
 # contain no raw recordings or participant metadata beyond public subject IDs.
 !05_external_validation/swpd_matched_pca50/table_*.csv
+!05_external_validation/swpd_learned_bottleneck/figures/table_*.csv
 
 # Local Podcast result record belongs to its separate repository/package and is
 # intentionally not part of the SWPD publication update.
