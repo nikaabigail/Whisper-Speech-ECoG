@@ -54,6 +54,12 @@ from whisper_ecog_ext.integrity import (  # noqa: E402
 )
 
 
+MANIFEST_PATH_SHADOW_BUG_EVALUATOR_SHA256 = (
+    "81d387b213dbc0f6f43425622766a94ca9a49983c7ce9615149b8778149cd2ef"
+)
+MANIFEST_PATH_SHADOW_HOTFIX_KIND = "manifest_path_shadow_finalize_only_v1"
+
+
 def _now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
@@ -212,11 +218,11 @@ def main(argv: Iterable[str] | None = None) -> int:
     reference_path = args.reference_summary.expanduser().resolve()
     run_dir = args.run_dir.expanduser().resolve()
     summary_path = run_dir / "summary.json"
-    manifest_path = run_dir / "artifact_manifest.json"
+    artifact_manifest_path = run_dir / "artifact_manifest.json"
     existing_summary: dict[str, Any] | None = None
     completed_manifest: dict[str, Any] | None = None
-    if summary_path.is_file() and manifest_path.is_file():
-        manifest = read_json(manifest_path)
+    if summary_path.is_file() and artifact_manifest_path.is_file():
+        manifest = read_json(artifact_manifest_path)
         manifest_payload = {
             key: value for key, value in manifest.items() if key != "fingerprint"
         }
@@ -273,13 +279,13 @@ def main(argv: Iterable[str] | None = None) -> int:
         raise RuntimeError("evaluation reference path differs from the frozen fit contract")
     frozen_cache_receipts = contract.get("cache_receipts", {})
     for fold in ALL_FOLDS:
-        manifest_path = cache / f"block_{fold:02d}.json"
+        cache_manifest_path = cache / f"block_{fold:02d}.json"
         receipt = frozen_cache_receipts.get(f"block_{fold}")
         if not isinstance(receipt, dict):
             raise RuntimeError(f"missing frozen cache receipt for block {fold}")
-        if sha256_file(manifest_path) != receipt.get("manifest_sha256"):
+        if sha256_file(cache_manifest_path) != receipt.get("manifest_sha256"):
             raise RuntimeError(f"cache manifest differs from fit contract: block {fold}")
-        cache_manifest = read_json(manifest_path)
+        cache_manifest = read_json(cache_manifest_path)
         arrays_sha256 = cache_manifest.get("arrays_sha256")
         arrays_path = cache / str(cache_manifest.get("arrays_file", ""))
         if (
@@ -312,7 +318,7 @@ def main(argv: Iterable[str] | None = None) -> int:
     expected_count = len(DEFAULT_SEEDS) * len(ALL_FOLDS)
     if int(fit_summary.get("selection_count", -1)) != expected_count:
         raise RuntimeError("fit summary does not contain all fold x seed selections")
-    expected_sources = {
+    runtime_sources = {
         "fit_runner": sha256_file(MODULE_ROOT / "fit_select_sub01.py"),
         "core": sha256_file(MODULE_ROOT / "core.py"),
         "evaluator": sha256_file(Path(__file__)),
@@ -328,8 +334,32 @@ def main(argv: Iterable[str] | None = None) -> int:
             MODULE_ROOT / "scripts" / "run_evaluate_frozen.ps1"
         ),
     }
-    if contract.get("implementation_sha256") != expected_sources:
+    frozen_sources = contract.get("implementation_sha256")
+    if not isinstance(frozen_sources, dict) or set(frozen_sources) != set(runtime_sources):
+        raise RuntimeError("implementation inventory changed after fit-only selection")
+    source_mismatches = {
+        key for key in runtime_sources if runtime_sources[key] != frozen_sources[key]
+    }
+    completed_test_paths = [
+        run_dir / "seeds" / f"seed_{seed}" / "folds" / f"fold_{fold:02d}"
+        / "test_complete.json"
+        for seed in DEFAULT_SEEDS
+        for fold in ALL_FOLDS
+    ]
+    manifest_shadow_hotfix = bool(
+        source_mismatches == {"evaluator"}
+        and frozen_sources.get("evaluator")
+        == MANIFEST_PATH_SHADOW_BUG_EVALUATOR_SHA256
+        and summary_path.is_file()
+        and all(path.is_file() for path in completed_test_paths)
+    )
+    if source_mismatches and not manifest_shadow_hotfix:
         raise RuntimeError("implementation changed after fit-only selection")
+    if manifest_shadow_hotfix:
+        print(
+            "[hotfix] revalidating 25 completed tests and finalizing the manifest only",
+            flush=True,
+        )
 
     selections: dict[tuple[int, int], dict[str, Any]] = {}
     inventory_items: list[dict[str, Any]] = []
@@ -387,7 +417,8 @@ def main(argv: Iterable[str] | None = None) -> int:
         "selection_count": len(inventory_items),
         "expected_selection_count": expected_count,
         "selections": inventory_items,
-        "evaluation_source_sha256": sha256_file(Path(__file__)),
+        # A finalize-only hotfix must preserve the source hash that opened test.
+        "evaluation_source_sha256": frozen_sources["evaluator"],
         "all_fold_seed_selections_frozen": True,
         "test_metrics_used_for_selection": False,
         "created_utc": _now(),
@@ -683,6 +714,14 @@ def main(argv: Iterable[str] | None = None) -> int:
         "completed_fold_seed_items": completed_items,
         "created_utc": _now(),
     }
+    if manifest_shadow_hotfix:
+        artifact_manifest["recovery_hotfix"] = {
+            "kind": MANIFEST_PATH_SHADOW_HOTFIX_KIND,
+            "scope": "finalize existing immutable summary/completions only",
+            "frozen_evaluator_sha256": frozen_sources["evaluator"],
+            "runtime_evaluator_sha256": runtime_sources["evaluator"],
+            "test_items_recomputed": False,
+        }
     artifact_manifest["fingerprint"] = fingerprint_json(artifact_manifest)
     if completed_manifest is not None:
         for key, value in artifact_manifest.items():
@@ -690,7 +729,7 @@ def main(argv: Iterable[str] | None = None) -> int:
                 raise RuntimeError("completed artifact manifest inventory changed")
         print(f"ALREADY COMPLETE AND REVALIDATED | {summary_path}", flush=True)
         return 0
-    atomic_write_json(manifest_path, artifact_manifest, overwrite=False)
+    atomic_write_json(artifact_manifest_path, artifact_manifest, overwrite=False)
     print("=" * 82, flush=True)
     print("CONTEXTUAL NEURAL E2E TEST COMPLETE", flush=True)
     print(

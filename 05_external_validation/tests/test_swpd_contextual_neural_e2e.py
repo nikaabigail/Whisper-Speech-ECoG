@@ -36,6 +36,19 @@ def test_frozen_evaluator_enables_deterministic_cuda_runtime() -> None:
     assert "torch.use_deterministic_algorithms(True)" in source
 
 
+def test_frozen_evaluator_keeps_cache_and_output_manifest_paths_distinct() -> None:
+    source = (
+        ROOT / "swpd_contextual_neural_e2e" / "evaluate_frozen_sub01.py"
+    ).read_text(encoding="utf-8")
+    assert 'artifact_manifest_path = run_dir / "artifact_manifest.json"' in source
+    assert 'cache_manifest_path = cache / f"block_{fold:02d}.json"' in source
+    assert not any(
+        line.strip().startswith("manifest_path = cache /")
+        for line in source.splitlines()
+    )
+    assert "MANIFEST_PATH_SHADOW_HOTFIX_KIND" in source
+
+
 def test_folded_legacy_skip_exactly_matches_pca_then_ols() -> None:
     rng = np.random.default_rng(10)
     standardized = rng.normal(size=(400, 27))
