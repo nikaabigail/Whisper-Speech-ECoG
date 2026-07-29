@@ -4,6 +4,8 @@
 Ivanova/Procenko и не использующий их patient-specific веса.
 
 [SWPD frozen contextual — финальный результат](swpd_contextual_frozen/README.md) ·
+[SWPD neural end-to-end — development fit](swpd_contextual_neural_e2e/README.md) ·
+[SWPD linear alternating — сохранённый контроль](swpd_contextual_alternating_v2/results/README.md) ·
 [SWPD matched PCA50 — предварительный target-space анализ](swpd_matched_pca50/README.md) ·
 [SWPD setup](SWPD_README.md) ·
 [VocalMind runbook](VOCALMIND_PRIMARY_RUNBOOK.md) ·
@@ -16,6 +18,7 @@ Ivanova/Procenko и не использующий их patient-specific веса
 |---|---|---|
 | SWPD final | Frozen contextual MEL80 vs заранее выбранный Whisper L4/PCA50 на общей MEL80-поверхности | **Завершено: primary n=8** |
 | SWPD development | `sub-01`: PCA50 против sRRR50, CLIP50 и alternating50 | **Завершено: выбран L4/PCA50; альтернативы отклонены** |
+| SWPD neural follow-up | `sub-01`: paired fixed-PCA50 neural против neural alternating, 5 folds × 5 seeds | Код готов; test закрыт до полного fit-only |
 | VocalMind | Повторяемое Mandarin word decoding на второй системе | Выполняется отдельно; результаты этого компьютера не подменяют внешний run |
 
 ## SWPD: финальный frozen contextual-результат
