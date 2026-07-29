@@ -1,4 +1,4 @@
-# Ossadtchi Speech Decoding
+# Speech Decoding
 
 ## От MEL-бейзлайна к Whisper, ансамблю слоёв и непрерывному декодированию
 
