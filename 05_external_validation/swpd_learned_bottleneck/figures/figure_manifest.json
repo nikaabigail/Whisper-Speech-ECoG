@@ -1,28 +1,28 @@
 {
   "artifacts": {
     "figure_01_common_mel80.png": {
-      "bytes": 174891,
-      "sha256": "0ea2b9e686b9a8010225905c5bd10049e793f20303263a260a9a690d0b5f758c"
+      "bytes": 188990,
+      "sha256": "5cc23dd0b3e9a4da0afaeaecc880a3a5d5fed2b955bd9cab7691493a489ec5eb"
     },
     "figure_01_common_mel80.svg": {
-      "bytes": 64896,
-      "sha256": "f956d68b00b46a6b74f33276903fb4f25fc3ba0f4bfbf95593dd9d5f5f9103c6"
+      "bytes": 74268,
+      "sha256": "5197f31ce582cbc8de649cc701933db405187246a88cb6383671123bfc3692ce"
     },
     "figure_02_lower20_mel_bins.png": {
-      "bytes": 170712,
-      "sha256": "1867a933447276131870bf98851b1a54aa5c83d02a72f6f43b38dd42dad6fb82"
+      "bytes": 186341,
+      "sha256": "dadcb05c85aa6e108826a8f05be5ada5917880da05c089e69eec8826327c8703"
     },
     "figure_02_lower20_mel_bins.svg": {
-      "bytes": 65358,
-      "sha256": "eff8da2f14357a0e5058dded82fb2394b07f35361d9c59ef29c339dfb3a01fab"
+      "bytes": 74752,
+      "sha256": "14ff02bca5df5659496ca09db40a7f6d83e26acdd1026bbc907ba7c03c703f6e"
     },
     "figure_03_delta_vs_pca50.png": {
-      "bytes": 165667,
-      "sha256": "ae39ae4fa4d211ad7e5fb933c6562561daf50daf1188dd3a2c18246aec5bf77c"
+      "bytes": 180912,
+      "sha256": "a4af82a25e7aad50cef45b9e250e35f09b01dc860f530775921b6f4b11fd0e5c"
     },
     "figure_03_delta_vs_pca50.svg": {
-      "bytes": 79108,
-      "sha256": "bcc960aea57c1ef64839b97fcad920f0adaf2d230a10d94b0afac2255dcbc963"
+      "bytes": 87702,
+      "sha256": "aef24e2625f4e022ce5e2b97890212471f4999c6987f4c0c4efdc08e8bdea5fc"
     },
     "table_01_bottleneck_performance.csv": {
       "bytes": 2805,
