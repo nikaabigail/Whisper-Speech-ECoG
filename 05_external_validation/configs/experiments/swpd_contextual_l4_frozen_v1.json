@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "status": "frozen_contextual_extension_after_sub01_development",
+  "dataset": "SingleWordProductionDutch",
+  "development_subject": "sub-01",
+  "primary_confirmatory_subjects": ["sub-02", "sub-03", "sub-04", "sub-05", "sub-06", "sub-07", "sub-08", "sub-09"],
+  "excluded_subjects": ["sub-10"],
+  "sub10_qc_amendment": {
+    "path": "configs/experiments/swpd_all_matched_pca50_v1_qc_amendment_sub10.json",
+    "sha256": "dacf398655dbc9ec410247456c495e9776c91008c5e9029fe4c83ff82645e40b",
+    "reason_code": "incomplete_recording_final_five_word_trials_missing"
+  },
+  "development_result": {
+    "path": "C:\\WhisperECoG_Work\\SWPD\\runs\\contextual_whisper_sub01_v1\\summary.json",
+    "sha256": "a6c41f7fe65605628adc575e3e02bea3f3db869caef1d89a1c11787ea6e39a2b",
+    "selected_system": "Whisper L4 train-only PCA50",
+    "direct_mel80_r": 0.486106,
+    "l4_r": 0.493621
+  },
+  "extraction": {
+    "high_gamma_hz": [70, 170],
+    "notch_hz": [[98, 102], [148, 152]],
+    "window_ms": 50,
+    "base_grid_ms": 10,
+    "neural_context_ms": [-200, -150, -100, -50, 0, 50, 100, 150, 200],
+    "output_grid_ms": 20,
+    "edge_guard_ms": 1000,
+    "whisper_model": "openai/whisper-base",
+    "whisper_revision": "e37978b90ca9030d5170a5c07aadb050351a65bb",
+    "whisper_layer": 4,
+    "mel_bins": 80
+  },
+  "comparison": {
+    "systems": ["direct_mel80", "whisper_l4_pca50"],
+    "neural_transform": "fold-train StandardScaler plus PCA50, whiten false",
+    "l4_transform": "fold-train StandardScaler plus PCA50, whiten true",
+    "decoder": "ordinary least squares",
+    "splits": "five visual blocks; test i, validation i+1 cyclic, remaining three train",
+    "primary_metric": "subject mean of fold mean Pearson r on common standardized MEL80",
+    "secondary_metric": "same metric on lower 20 MEL bins",
+    "primary_contrast": "whisper_l4_pca50 minus direct_mel80"
+  },
+  "population_inference": {
+    "unit": "patient",
+    "n": 8,
+    "interval": "two-sided 95 percent t interval",
+    "paired_test": "two-sided one-sample t test of patient deltas",
+    "sign_test": "two-sided exact binomial sensitivity"
+  },
+  "historical_access_disclosure": "The dataset was used by an earlier non-contextual analysis. This is a frozen contextual extension, not a claim of a never-accessed cohort.",
+  "fixed_before_contextual_confirmatory_extraction": true
+}

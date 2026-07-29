@@ -3,8 +3,8 @@
 Отдельный трек внешней валидации, не изменяющий исторические пайплайны
 Ivanova/Procenko и не использующий их patient-specific веса.
 
-[SWPD matched PCA50 — результаты, графики и аудит](swpd_matched_pca50/README.md) ·
-[Обучаемое сжатие SWPD — PCA, sRRR, CLIP и alternating](swpd_learned_bottleneck/README.md) ·
+[SWPD frozen contextual — финальный результат](swpd_contextual_frozen/README.md) ·
+[SWPD matched PCA50 — предварительный target-space анализ](swpd_matched_pca50/README.md) ·
 [SWPD setup](SWPD_README.md) ·
 [VocalMind runbook](VOCALMIND_PRIMARY_RUNBOOK.md) ·
 [Общий протокол](PROTOCOL_DRAFT.md) ·
@@ -14,25 +14,25 @@ Ivanova/Procenko и не использующий их patient-specific веса
 
 | Dataset | Постановка | Статус |
 |---|---|---|
-| SWPD | Matched MEL80 vs Whisper L3/L4/L5, train-only PCA50 + OLS | **Завершено: primary n=8** |
-| SWPD `sub-01` follow-up | PCA50 против sRRR50, CLIP50 и alternating50 на общей MEL80-поверхности | **Завершено: PCA50 сохранён, learned bottlenecks не дали прибавки** |
+| SWPD final | Frozen contextual MEL80 vs заранее выбранный Whisper L4/PCA50 на общей MEL80-поверхности | **Завершено: primary n=8** |
+| SWPD development | `sub-01`: PCA50 против sRRR50, CLIP50 и alternating50 | **Завершено: выбран L4/PCA50; альтернативы отклонены** |
 | VocalMind | Повторяемое Mandarin word decoding на второй системе | Выполняется отдельно; результаты этого компьютера не подменяют внешний run |
 
-## SWPD: зафиксированный результат
+## SWPD: финальный frozen contextual-результат
 
-![SWPD matched result](swpd_matched_pca50/figure_00_main_summary.png)
+![SWPD frozen contextual result](swpd_contextual_frozen/figures/figure_01_frozen_main.png)
 
-| Система | Correlation, mean ± SD | 95% t-CI |
+| Система | Средний Pearson `r` | 95% t-CI |
 |---|---:|---:|
-| MEL80 | 0,02388 ± 0,00956 | [0,01588; 0,03187] |
-| Whisper L3 | 0,05327 ± 0,01828 | [0,03799; 0,06856] |
-| Whisper L4 | 0,05397 ± 0,01726 | [0,03954; 0,06840] |
-| Whisper L5 | **0,05522 ± 0,01685** | **[0,04113; 0,06930]** |
+| Прямой MEL80 | 0,69187 | [0,60060; 0,78314] |
+| Whisper L4 → PCA50 → MEL80 | **0,69290** | [0,60190; 0,78390] |
+| Δ L4−MEL | **+0,00103** | **[+0,00002; +0,00204]** |
 
-L3/L4/L5 превысили MEL80 у всех `8/8` confirmatory пациентов. Все три
-предзаданных сравнения остаются значимыми после Holm correction.
+L4 превысил MEL80 у `6/8` пациентов. Предзаданный paired t-test: `p=0,0462`;
+точный знаковый тест: `p=0,2891`. Эффект положительный, но очень мал и требует
+осторожной интерпретации.
 
-Полный разбор: [swpd_matched_pca50](swpd_matched_pca50/README.md).
+Полный разбор: [swpd_contextual_frozen](swpd_contextual_frozen/README.md).
 
 ## Scientific guardrails
 
@@ -43,8 +43,8 @@ L3/L4/L5 превысили MEL80 у всех `8/8` confirmatory пациент�
 - Primary SWPD metric — all-frame representation predictability, не word accuracy.
 - High-gamma и Whisper targets офлайн/некаузальны; SWPD-результат не является
   real-time или asynchronous decoder.
-- L3/L4/L5 имеют отдельные train-only PCA bases, поэтому прямое усреднение их
-  PCA-координат не объявляется ансамблем.
+- Финальная система L4 была выбрана только на `sub-01`; L3/L5 и learned
+  bottlenecks не перебирались на confirmatory cohort.
 - Patient, а не frame, fold или optimizer seed, является статистической единицей.
 - `sub-01` исключён из primary inference как development subject.
 - `sub-10` исключён по source-only QC: официальная запись заканчивается после

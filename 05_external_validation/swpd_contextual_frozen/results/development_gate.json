@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "kind": "swpd_contextual_l4_portable_development_gate",
+  "subject": "sub-01",
+  "development_only": true,
+  "confirmatory_subjects_read": false,
+  "selected_system": "Whisper L4 train-only PCA50",
+  "direct_mel80_r": 0.486106,
+  "l4_r": 0.493621,
+  "delta_l4_minus_mel80": 0.007515,
+  "source_summary_sha256": "a6c41f7fe65605628adc575e3e02bea3f3db869caef1d89a1c11787ea6e39a2b",
+  "interpretation_guard": "One development participant; five temporal folds are not five patients. This compact gate records the frozen selection and checksum but does not replace the full local development artifact."
+}

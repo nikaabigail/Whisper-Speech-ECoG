@@ -378,3 +378,19 @@ same config/commit; it is not a separate pilot.
   `5c6fa8cbcedaf81867e11f77aafd502779190e5fb3abc4aa6ab333bb6424f3f6`.
 - Machine-readable frozen record:
   `results_records/swpd_matched_pca50_confirmatory_qc_v2_20260728.json`.
+## 2026-07-29 — frozen contextual SWPD завершён
+
+- После development-анализа только на `sub-01` зафиксирована система
+  `Whisper L4 → train-only PCA50`; контроль — прямая регрессия в MEL80.
+- Без смены системы завершены `sub-02…sub-09`; `sub-01` исключён из primary
+  inference, `sub-10` исключён по ранее зафиксированной source-QC поправке.
+- MEL80: `r=0,69187`, Whisper L4: `r=0,69290`, парная разница
+  `+0,00103`, 95% t-CI `[+0,00002; +0,00204]`.
+- Whisper выиграл у `6/8` пациентов; paired `t p=0,0462`, exact sign
+  `p=0,2891`. Вывод зафиксирован как сопоставимость и малый пограничный прирост,
+  а не существенное практическое превосходство.
+- По нижним 20 MEL-бинам: `Δ=+0,00074`, 95% t-CI
+  `[-0,00004; +0,00152]`, `p=0,0604`.
+- Проверены SHA-256 всех восьми subject receipts, summary и prediction-файлов.
+  Frozen run-contract fingerprint:
+  `d6ebb1f5f18f2120d43b1d82fcaab8d00d62a4e2515497753fe31eab1c26df87`.
