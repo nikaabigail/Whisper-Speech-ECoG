@@ -33,6 +33,7 @@
 | 5a. SWPD frozen contextual | Финальное patient-level сравнение прямого MEL80 с заранее выбранным Whisper L4/PCA50 на общей MEL80-поверхности | [Код, результаты, графики и ограничения](05_external_validation/swpd_contextual_frozen/README.md) |
 | 5b. SWPD preliminary PCA50 | Предшествующий анализ предсказуемости 50 target-компонент L3/L4/L5 | [Отдельный протокол и аудит](05_external_validation/swpd_matched_pca50/README.md) |
 | 5c. SWPD neural end-to-end | Development follow-up: парный fixed-PCA50 neural-контроль против constrained alternating, 5 folds × 5 seeds | [Код и безопасный двухступенчатый запуск](05_external_validation/swpd_contextual_neural_e2e/README.md) |
+| 5d. SWPD neural population | Frozen fixed-Q neural follow-up на `sub-02…sub-09`, 5 folds × 5 seeds | [Population fit и patient-level evaluation](05_external_validation/swpd_contextual_neural_population/README.md) |
 | Результаты | Таблицы, определения метрик и графики | [results](results/README.md) |
 | Веса | Ожидаемая структура и правила целостности | [checkpoints](checkpoints/README.md) |
 
