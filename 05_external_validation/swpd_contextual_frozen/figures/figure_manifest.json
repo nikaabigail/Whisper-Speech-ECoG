@@ -1,0 +1,12 @@
+{
+  "artifacts": {
+    "figures/figure_01_frozen_main.png": "bd7ffe7d5dcd2a42d85c71af89233d6afb6c80dfaa4c6ef5340c1078735a1ec4",
+    "figures/figure_01_frozen_main.svg": "d8a4c05c6a743036fe29fae5da6cc001f6c601751ce8ad16cf2028d490443e94",
+    "figures/figure_02_all_vs_low20.png": "740543d16c4b8ded4078c6e16e8fdfd144f83f32f191850540d4d6310edb4d38",
+    "figures/figure_02_all_vs_low20.svg": "a085c4e3d1a114434092fcb0388315b5597f4da786434597e3933278dbd239ea",
+    "results/frozen_subject_metrics.csv": "a8df026b6fbc663b61ad8648f85545d37fd6b4dde9cac4e13755f6d07b672601"
+  },
+  "schema_version": 1,
+  "source": "results/population_summary.json",
+  "source_sha256": "a732d822d131cf83fe3eb3a451b4a66388c4c59a11ca963096b2d6e5623659a3"
+}

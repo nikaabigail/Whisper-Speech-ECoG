@@ -15,8 +15,7 @@
 [Главные результаты](#главные-результаты) ·
 [Архитектура](docs/ARCHITECTURE.md) ·
 [Внешняя валидация](05_external_validation/README.md) ·
-[SWPD: MEL vs Whisper](05_external_validation/swpd_matched_pca50/README.md) ·
-[SWPD: обучаемое сжатие](05_external_validation/swpd_learned_bottleneck/README.md) ·
+[SWPD: финальный frozen contextual](05_external_validation/swpd_contextual_frozen/README.md) ·
 [Происхождение](docs/PROVENANCE.md) ·
 [Чек-лист публикации](docs/PUBLISHING_CHECKLIST.md)
 
@@ -31,8 +30,8 @@
 | 3. L3+L4+L5 | Усреднение вероятностей трёх комплементарных слоёв | [03_whisper_ensemble](03_whisper_ensemble/README.md) |
 | 4. Whisper async | Скользящее декодирование без подсказки о начале слова | [04_whisper_async](04_whisper_async/README.md) |
 | 5. External validation | Новый leakage-controlled MEL/Whisper L3/L4/L5 пайплайн для SWPD и VocalMind | [05_external_validation](05_external_validation/README.md) |
-| 5a. SWPD matched PCA50 | Завершённое patient-level сравнение MEL80 против Whisper L3/L4/L5 | [SWPD results, figures and audit](05_external_validation/swpd_matched_pca50/README.md) |
-| 5b. Обучаемое сжатие SWPD | Проверка supervised RRR50, CLIP50 и alternating50 на этапе разработки для `sub-01` | [Код, графики и зафиксированные решения](05_external_validation/swpd_learned_bottleneck/README.md) |
+| 5a. SWPD frozen contextual | Финальное patient-level сравнение прямого MEL80 с заранее выбранным Whisper L4/PCA50 на общей MEL80-поверхности | [Код, результаты, графики и ограничения](05_external_validation/swpd_contextual_frozen/README.md) |
+| 5b. SWPD preliminary PCA50 | Предшествующий анализ предсказуемости 50 target-компонент L3/L4/L5 | [Отдельный протокол и аудит](05_external_validation/swpd_matched_pca50/README.md) |
 | Результаты | Таблицы, определения метрик и графики | [results](results/README.md) |
 | Веса | Ожидаемая структура и правила целостности | [checkpoints](checkpoints/README.md) |
 
@@ -97,29 +96,27 @@ Accuracy синхронной 27-классовой задачи и F1 непр�
 
 ### Внешняя валидация SWPD
 
-На независимом публичном ECoG-датасете SWPD выполнено matched-сравнение:
-одинаковые neural frames, temporal splits, train-only PCA50, OLS и метрика;
-меняется только акустическое target-представление. Primary confirmatory cohort —
-`sub-02…sub-09`, `n=8` пациентов.
+На публичном ECoG-датасете SWPD выполнено финальное frozen contextual-сравнение.
+После разработки только на `sub-01` заранее выбран Whisper L4/PCA50. Затем без
+смены системы обработаны `sub-02…sub-09` (`n=8` пациентов). Прямой MEL80 и
+Whisper оцениваются на одной поверхности из 80 стандартизованных MEL-бинов.
 
-На графике серый `MEL80` — заново воспроизведённый нами **авторский акустический
-target-контроль**; цветные `Whisper L3/L4/L5` — **наша замена target на Whisper**.
-Число MEL не перенесено из статьи: обе стороны пересчитаны в одном протоколе.
-
-| Система | Held-out component correlation, mean ± SD | 95% t-CI |
+| Система | Средний Pearson `r` | 95% t-CI |
 |---|---:|---:|
-| Авторский target: MEL80 (наш контрольный прогон) | 0,02388 ± 0,00956 | [0,01588; 0,03187] |
-| Наша замена: Whisper L3 | 0,05327 ± 0,01828 | [0,03799; 0,06856] |
-| Наша замена: Whisper L4 | 0,05397 ± 0,01726 | [0,03954; 0,06840] |
-| **Наша замена: Whisper L5** | **0,05522 ± 0,01685** | **[0,04113; 0,06930]** |
+| Прямой MEL80-контроль | 0,69187 | [0,60060; 0,78314] |
+| Whisper L4 → PCA50 → MEL80 | **0,69290** | [0,60190; 0,78390] |
+| Парная разница | **+0,00103** | **[+0,00002; +0,00204]** |
 
-Каждый слой Whisper превысил MEL80 у `8/8` пациентов; Holm-adjusted p-values:
-L3 `3,37×10⁻⁵`, L4 `2,67×10⁻⁵`, L5 `1,98×10⁻⁵`.
+L4 выиграл у `6/8` пациентов: paired `t p=0,046`, exact sign `p=0,289`.
+Это малый пограничный эффект, а не практически крупное превосходство.
 
-![SWPD: matched MEL80 versus Whisper](05_external_validation/swpd_matched_pca50/figure_00_main_summary.png)
+![SWPD frozen contextual](05_external_validation/swpd_contextual_frozen/figures/figure_01_frozen_main.png)
 
-Полный протокол, QC `sub-10`, архитектура, PNG/SVG, таблицы и независимый аудит
-находятся в разделе [SWPD matched PCA50](05_external_validation/swpd_matched_pca50/README.md).
+Полный frozen-протокол, пациентная таблица, вторичная low20-метрика, код и
+контрольные суммы находятся в разделе
+[SWPD contextual frozen](05_external_validation/swpd_contextual_frozen/README.md).
+Предыдущий анализ корреляций 50 PCA-компонент сохранён отдельно и не смешивается
+с этой общей MEL80-метрикой.
 
 ## Что именно находится в репозитории
 

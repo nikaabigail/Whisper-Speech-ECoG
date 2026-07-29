@@ -21,20 +21,22 @@ def test_swpd_all_runner_avoids_inline_python_and_utf8_pth_failure() -> None:
     assert "Remove-Item Env:PYTHONUTF8" in source
 
 
-def test_swpd_bottleneck_runner_avoids_inline_python_and_utf8_pth_failure() -> None:
+def test_swpd_frozen_runner_avoids_inline_python_and_utf8_pth_failure() -> None:
     runner = (
         PROJECT_ROOT
-        / "swpd_learned_bottleneck"
+        / "swpd_contextual_frozen"
         / "scripts"
-        / "run_sub01_phase1.ps1"
+        / "run_frozen.ps1"
     )
     source = runner.read_text(encoding="utf-8")
 
     assert "& $Python -c" not in source
     assert "Remove-Item Env:PYTHONUTF8" in source
+    assert "preflight.py" in source
 
-    clip_runner = runner.with_name("run_sub01_clip.ps1")
-    clip_source = clip_runner.read_text(encoding="utf-8")
-    assert "& $Python -c" not in clip_source
-    assert "clip_preflight.py" in clip_source
-    assert "Remove-Item Env:PYTHONUTF8" in clip_source
+    start_source = runner.with_name("start_frozen_background.ps1").read_text(
+        encoding="utf-8"
+    )
+    watch_source = runner.with_name("watch_frozen.ps1").read_text(encoding="utf-8")
+    assert "-WindowStyle Hidden" in start_source
+    assert "-Wait" in watch_source

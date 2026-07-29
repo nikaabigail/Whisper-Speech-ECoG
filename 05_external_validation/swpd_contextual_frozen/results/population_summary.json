@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "kind": "swpd_contextual_l4_frozen_population_summary",
+  "primary_subjects": ["sub-02", "sub-03", "sub-04", "sub-05", "sub-06", "sub-07", "sub-08", "sub-09"],
+  "development_subject_excluded": "sub-01",
+  "excluded_by_frozen_qc": ["sub-10"],
+  "historical_access_disclosure": "The dataset was used by an earlier non-contextual analysis. This is a frozen contextual extension, not a claim of a never-accessed cohort.",
+  "primary_inference": {
+    "direct_mel80": {"n": 8, "mean": 0.6918695462951309, "sd": 0.10917600328211521, "sem": 0.03859954613181422, "ci95_t": [0.6005961234113685, 0.7831429691788933]},
+    "whisper_l4_pca50": {"n": 8, "mean": 0.6928990613460688, "sd": 0.10884448309267154, "sem": 0.038482336044786285, "ci95_t": [0.601902796276624, 0.7838953264155136]},
+    "delta_l4_minus_mel80": {"n": 8, "mean": 0.0010295150509379292, "sd": 0.001203943684237436, "sem": 0.00042565837164550325, "ci95_t": [0.000022992942451477644, 0.002036037159424381]},
+    "wins": 6,
+    "two_sided_paired_t_p": 0.046184189190027244,
+    "two_sided_exact_sign_p": 0.2890625
+  },
+  "lower_20_inference": {
+    "direct_mel80": {"n": 8, "mean": 0.7180497792848844, "sd": 0.11164125802340284, "ci95_t": [0.6247153518602588, 0.8113842067095101]},
+    "whisper_l4_pca50": {"n": 8, "mean": 0.7187866881892657, "sd": 0.11109195779891852, "ci95_t": [0.6259114872445649, 0.8116618891339665]},
+    "delta_l4_minus_mel80": {"n": 8, "mean": 0.0007369089043813837, "sd": 0.0009322207920629573, "ci95_t": [-0.00004244718136146928, 0.0015162649901242367]},
+    "wins": 6,
+    "two_sided_paired_t_p": 0.060448074573463316,
+    "two_sided_exact_sign_p": 0.2890625
+  },
+  "subject_rows": [
+    {"subject": "sub-02", "direct_mel80_r": 0.61080500117996, "whisper_l4_pca50_r": 0.6102330620466623, "delta_l4_minus_mel80": -0.000571939133297672, "direct_mel80_low20_r": 0.645482110886921, "whisper_l4_pca50_low20_r": 0.6464213841270928},
+    {"subject": "sub-03", "direct_mel80_r": 0.8132624248431537, "whisper_l4_pca50_r": 0.814229626708277, "delta_l4_minus_mel80": 0.000967201865123335, "direct_mel80_low20_r": 0.8554201655780231, "whisper_l4_pca50_low20_r": 0.8552767179460259},
+    {"subject": "sub-04", "direct_mel80_r": 0.7596696173083626, "whisper_l4_pca50_r": 0.7614783359614792, "delta_l4_minus_mel80": 0.0018087186531166033, "direct_mel80_low20_r": 0.7750131379758493, "whisper_l4_pca50_low20_r": 0.7762583678596294},
+    {"subject": "sub-05", "direct_mel80_r": 0.5215217353627866, "whisper_l4_pca50_r": 0.5237410071589712, "delta_l4_minus_mel80": 0.002219271796184641, "direct_mel80_low20_r": 0.5406128840267174, "whisper_l4_pca50_low20_r": 0.5415330268907081},
+    {"subject": "sub-06", "direct_mel80_r": 0.8437935185886515, "whisper_l4_pca50_r": 0.8435715938246758, "delta_l4_minus_mel80": -0.00022192476397564498, "direct_mel80_low20_r": 0.8747448124060065, "whisper_l4_pca50_low20_r": 0.8739499605512394},
+    {"subject": "sub-07", "direct_mel80_r": 0.6666968801666842, "whisper_l4_pca50_r": 0.6695688837067821, "delta_l4_minus_mel80": 0.002872003540097978, "direct_mel80_low20_r": 0.6893410837534517, "whisper_l4_pca50_low20_r": 0.6916368217090394},
+    {"subject": "sub-08", "direct_mel80_r": 0.696455601674671, "whisper_l4_pca50_r": 0.696726629207177, "delta_l4_minus_mel80": 0.000271027532505963, "direct_mel80_low20_r": 0.6958336508276324, "whisper_l4_pca50_low20_r": 0.6962354102097053},
+    {"subject": "sub-09", "direct_mel80_r": 0.6227515912367775, "whisper_l4_pca50_r": 0.6236433521545257, "delta_l4_minus_mel80": 0.00089176091774823, "direct_mel80_low20_r": 0.6679503888244739, "whisper_l4_pca50_low20_r": 0.668981816220686}
+  ],
+  "source_run": {
+    "completed_utc": "2026-07-29T15:04:13.530320+00:00",
+    "run_contract_fingerprint": "d6ebb1f5f18f2120d43b1d82fcaab8d00d62a4e2515497753fe31eab1c26df87",
+    "all_subject_receipts_verified": true,
+    "all_summary_and_prediction_hashes_verified": true
+  }
+}
