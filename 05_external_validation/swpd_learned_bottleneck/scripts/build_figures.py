@@ -17,7 +17,7 @@ from scipy import stats
 
 TARGETS = ("mel80", "L3", "L4", "L5", "L345")
 TARGET_LABELS = {
-    "mel80": "MEL80\ncontrol",
+    "mel80": "MEL80\nконтроль",
     "L3": "Whisper\nL3",
     "L4": "Whisper\nL4",
     "L5": "Whisper\nL5",
@@ -26,9 +26,9 @@ TARGET_LABELS = {
 METHODS = ("pca50", "srrr50", "clip50", "alternating50")
 METHOD_LABELS = {
     "pca50": "PCA50",
-    "srrr50": "supervised RRR50",
+    "srrr50": "обучаемый RRR50",
     "clip50": "CLIP50",
-    "alternating50": "alternating50",
+    "alternating50": "чередование50",
 }
 COLORS = {
     "pca50": "#0072B2",
@@ -189,17 +189,17 @@ def performance_figure(
             zorder=3,
         )
     axis.axvline(0.5, color="#777777", linewidth=1, linestyle="--", alpha=0.65)
-    axis.text(0.02, 0.98, "acoustic control", transform=axis.transAxes, va="top", color="#555555")
-    axis.text(0.30, 0.98, "Whisper targets", transform=axis.transAxes, va="top", color="#555555")
+    axis.text(0.02, 0.98, "акустический контроль", transform=axis.transAxes, va="top", color="#555555")
+    axis.text(0.30, 0.98, "целевые признаки Whisper", transform=axis.transAxes, va="top", color="#555555")
     axis.set_xticks(x, [TARGET_LABELS[target] for target in TARGETS])
     axis.set_ylabel(ylabel)
-    axis.set_title("PCA50 remains strongest on the common acoustic reconstruction surface")
+    axis.set_title("PCA50 остаётся лучшим на общей поверхности акустического восстановления")
     axis.grid(axis="y", color="#D0D0D0", linewidth=0.7, alpha=0.7)
     axis.legend(frameon=False, ncol=2, loc="lower right")
     axis.text(
         0,
         -0.20,
-        "Points: fold mean. Error bars: descriptive 95% t-interval across five temporal folds of sub-01; not a population CI.",
+        "Точки: среднее по фолдам. Интервалы: описательный 95%-й t-интервал по пяти временным фолдам sub-01; не популяционный ДИ.",
         transform=axis.transAxes,
         fontsize=8.5,
         color="#555555",
@@ -244,14 +244,14 @@ def delta_figure(
             )
         axis.axhline(0, color="#444444", linewidth=1)
         axis.set_title(TARGET_LABELS[target].replace("\n", " "))
-        axis.set_xticks(range(len(methods)), ["sRRR", "CLIP", "alternating"], rotation=30, ha="right")
+        axis.set_xticks(range(len(methods)), ["sRRR", "CLIP", "чередование"], rotation=30, ha="right")
         axis.grid(axis="y", color="#D0D0D0", linewidth=0.7, alpha=0.7)
-    axes[0].set_ylabel("Change in common MEL80 Fisher r vs PCA50")
-    figure.suptitle("Learned bottlenecks did not improve held-out temporal blocks", y=1.02)
+    axes[0].set_ylabel("Изменение общего MEL80 Fisher r относительно PCA50")
+    figure.suptitle("Обучаемое сжатие не улучшило результат на отложенных временных блоках", y=1.02)
     figure.text(
         0.5,
         -0.04,
-        "Open points: five temporal folds. Filled point and bar: mean and descriptive 95% t-interval; not patient-level inference.",
+        "Пустые точки: пять временных фолдов. Закрашенная точка и интервал: среднее и описательный 95%-й t-интервал; не вывод на уровне пациентов.",
         ha="center",
         fontsize=8.5,
         color="#555555",
@@ -325,7 +325,7 @@ def main() -> int:
             output,
             "mel80",
             "figure_01_common_mel80",
-            "Common MEL80 reconstruction: Fisher-averaged r",
+            "Общее восстановление MEL80: Fisher-усреднённый r",
         )
     )
     artifacts.extend(
@@ -334,7 +334,7 @@ def main() -> int:
             output,
             "low20",
             "figure_02_lower20_mel_bins",
-            "Lower 20 MEL bins: Fisher-averaged r",
+            "Нижние 20 MEL-бинов: Fisher-усреднённый r",
         )
     )
     artifacts.extend(delta_figure(data, output))

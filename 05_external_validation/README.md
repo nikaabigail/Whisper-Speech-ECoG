@@ -1,10 +1,10 @@
-# External validation: SWPD and VocalMind
+# Внешняя валидация: SWPD и VocalMind
 
 Отдельный трек внешней валидации, не изменяющий исторические пайплайны
 Ivanova/Procenko и не использующий их patient-specific веса.
 
 [SWPD matched PCA50 — результаты, графики и аудит](swpd_matched_pca50/README.md) ·
-[SWPD learned bottlenecks — PCA, sRRR, CLIP и alternating](swpd_learned_bottleneck/README.md) ·
+[Обучаемое сжатие SWPD — PCA, sRRR, CLIP и alternating](swpd_learned_bottleneck/README.md) ·
 [SWPD setup](SWPD_README.md) ·
 [VocalMind runbook](VOCALMIND_PRIMARY_RUNBOOK.md) ·
 [Общий протокол](PROTOCOL_DRAFT.md) ·

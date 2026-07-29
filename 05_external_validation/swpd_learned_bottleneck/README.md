@@ -1,58 +1,62 @@
-# SWPD learned bottleneck (development subject `sub-01`)
+# Обучаемое сжатие Whisper на SWPD (`sub-01`, этап разработки)
 
-This isolated follow-up tests whether a train-only learned 50-dimensional target
-subspace is more neurally predictable than the existing unsupervised PCA50
-subspace. It does not modify the frozen matched-PCA50 implementation or results.
+Этот изолированный эксперимент проверяет, становится ли 50-мерное пространство
+целевых признаков Whisper более предсказуемым по нейронным данным, если обучать
+проектор только на тренировочной части, вместо использования исходного
+неконтролируемого PCA50. Зафиксированная реализация matched-PCA50 и её результаты
+не изменяются.
 
-[Frozen result record](RESULTS_2026-07-29.md) | [machine-readable table](figures/table_01_bottleneck_performance.csv) | [figure manifest](figures/figure_manifest.json)
+[Зафиксированный отчёт](RESULTS_2026-07-29.md) · [Таблица для машинной обработки](figures/table_01_bottleneck_performance.csv) · [Манифест графиков](figures/figure_manifest.json)
 
-## Result
+## Главный результат
 
-PCA50 remains the selected development method. Neither supervised RRR50, CLIP50,
-nor constrained alternating optimization improved the common held-out MEL80
-reconstruction surface.
+PCA50 остаётся выбранным методом по итогам разработки. Ни supervised RRR50,
+ни CLIP50, ни ограниченная чередующаяся оптимизация не улучшили качество
+восстановления на общей отложенной поверхности MEL80.
 
-| Method / best Whisper target | Common MEL80 r, mean ± SD | Lower 20 MEL bins, mean ± SD |
+| Метод / лучший целевой слой Whisper | Общий MEL80, r: среднее ± SD | Нижние 20 MEL-бинов: среднее ± SD |
 |---|---:|---:|
-| **PCA50 / L5** | **0.2810 ± 0.0376** | 0.2965 ± 0.0381 |
-| supervised RRR50 / L4 | 0.2765 ± 0.0378 | 0.2934 ± 0.0383 |
-| CLIP50 / L5 | 0.2591 ± 0.0295 | 0.2848 ± 0.0429 |
-| alternating50 / L4 | 0.2810 ± 0.0376 | **0.2968 ± 0.0374** |
+| **PCA50 / L5** | **0,2810 ± 0,0376** | 0,2965 ± 0,0381 |
+| supervised RRR50 / L4 | 0,2765 ± 0,0378 | 0,2934 ± 0,0383 |
+| CLIP50 / L5 | 0,2591 ± 0,0295 | 0,2848 ± 0,0429 |
+| alternating50 / L4 | 0,2810 ± 0,0376 | **0,2968 ± 0,0374** |
 
-The alternating L4 value equals PCA50 because validation selected the unchanged
-PCA initialization in every L4 fold. Across all target/fold tasks, alternating
-optimization selected iteration zero in 23/25 cases. The other two validation
-selections reduced held-out test performance.
+Результат alternating50 для L4 совпадает с PCA50, потому что на всех фолдах L4
+валидация выбрала неизменённую PCA-инициализацию. Среди всех сочетаний целей и
+фолдов чередующаяся оптимизация выбрала нулевую итерацию в 23 из 25 случаев.
+В двух остальных случаях выбор по валидации ухудшил качество на отложенном тесте.
 
-![Common MEL80 comparison](figures/figure_01_common_mel80.png)
+![Сравнение методов на общей поверхности MEL80](figures/figure_01_common_mel80.png)
 
-![Lower 20 MEL-bin comparison](figures/figure_02_lower20_mel_bins.png)
+![Сравнение по нижним 20 MEL-бинам](figures/figure_02_lower20_mel_bins.png)
 
-![Paired changes from PCA50](figures/figure_03_delta_vs_pca50.png)
+![Парные изменения относительно PCA50](figures/figure_03_delta_vs_pca50.png)
 
-Error bars are descriptive 95% t-intervals across five temporal folds of the
-single development participant `sub-01`. They are not population confidence
-intervals and the folds are not independent patients.
+Полосы погрешностей — описательные 95%-е t-интервалы по пяти временным фолдам
+единственного участника этапа разработки `sub-01`. Это не популяционные
+доверительные интервалы: пять фолдов не являются пятью независимыми пациентами.
 
-## Protocol
+## Протокол
 
-Phase 1 compares:
+На первом этапе сравниваются:
 
-- `pca50`: deterministic train-only PCA50 control;
-- `srrr50`: deterministic supervised reduced-rank projector with orthonormal
-  columns, fitted from the train neural subspace only;
-- targets `MEL80`, `L3`, `L4`, `L5`, and concatenated `L3+L4+L5` (1536 -> 50).
+- `pca50` — детерминированный контроль PCA50, обучаемый только на train;
+- `srrr50` — детерминированный supervised reduced-rank-проектор с
+  ортонормированными столбцами, обучаемый только по тренировочному нейронному
+  подпространству;
+- цели `MEL80`, `L3`, `L4`, `L5` и объединение `L3+L4+L5` размерности 1536 → 50.
 
-Every fold uses three train blocks, the next block for validation, and one held-out
-test block. All scalers, projectors, decoders, and the common MEL80 diagnostic
-probe are fitted only on train frames. The common MEL probe and its lower 20 bins
-are the cross-representation comparison; the 50-coordinate correlation remains
-representation-specific.
+В каждом фолде используются три временных блока для обучения, следующий блок
+для валидации и один отложенный блок для теста. Все нормализаторы, проекторы,
+декодеры и диагностический проектор в MEL80 обучаются исключительно на train.
+Общая MEL-поверхность и её нижние 20 бинов используются для сравнения разных
+представлений. Корреляция по 50 координатам остаётся специфичной для конкретного
+пространства признаков и напрямую между методами не сравнивается.
 
-The runner refuses any cache directory not named `sub-01`. Confirmatory subjects
-are not read during development.
+Сценарий отказывается работать с каталогом кэша, если он не относится к
+`sub-01`. Данные подтверждающих участников на этапе разработки не открываются.
 
-Start the full five-fold phase in a hidden PowerShell process:
+Запуск полной серии из пяти фолдов в скрытом процессе PowerShell:
 
 ```powershell
 Set-Location "<repo>\05_external_validation\swpd_learned_bottleneck"
@@ -60,25 +64,27 @@ Set-ExecutionPolicy -Scope Process Bypass
 .\scripts\start_sub01_phase1_background.ps1
 ```
 
-Inspect progress (Ctrl+C stops only the watcher):
+Просмотр хода эксперимента (`Ctrl+C` остановит только наблюдение):
 
 ```powershell
 .\scripts\watch_sub01_phase1.ps1 -Follow
 ```
 
-After phase 1 is frozen, start the separate CLIP50 development run:
+После фиксации первого этапа отдельный запуск CLIP50:
 
 ```powershell
 .\scripts\start_sub01_clip_background.ps1
 .\scripts\watch_sub01_clip.ps1 -Follow
 ```
 
-CLIP uses symmetric InfoNCE, an orthonormal target projector, train-only PCA
-initialization, validation-only early stopping, and negatives separated by at
-least 500 ms within the same recording block. Test data are evaluated only after
-the validation checkpoint is fixed.
+CLIP использует симметричный InfoNCE, ортонормированный проектор целей,
+PCA-инициализацию только по train, раннюю остановку только по validation и
+негативные пары, разделённые минимум на 500 мс внутри одного блока записи.
+Тест открывается только после окончательной фиксации контрольной точки по
+валидации.
 
-Run the third, constrained alternating development method after CLIP is frozen:
+После фиксации CLIP запускается третий метод — ограниченная чередующаяся
+оптимизация:
 
 ```powershell
 .\scripts\start_sub01_alternating_background.ps1
