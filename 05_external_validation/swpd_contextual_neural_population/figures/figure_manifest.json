@@ -1,0 +1,12 @@
+{
+  "artifacts": {
+    "figures/figure_01_authors_vs_latest.png": "80fc4e472976a66c10ff1403ec2978d97a0b57a6c2472269437622e0b20faf36",
+    "figures/figure_01_authors_vs_latest.svg": "b1fa80bb32325b3febbd6e1843e75cb6dfee17fb4af8f631d1515ca33b776438"
+  },
+  "authors_values_note": "Approximate values visually digitized from Verwoert et al. 2022 Figure 4a; not exact source data.",
+  "schema_version": 1,
+  "sources": {
+    "results/authors_figure4a_digitized.csv": "7866a84cc0c41bce3dae94707c9fa162f8662e799d10980b6ecd282f09a4a530",
+    "results/final_summary.json": "1d610b9a61352a25a17ad81cdd21bd1c96c25511cb8a812fbcb63320aa7cb668"
+  }
+}

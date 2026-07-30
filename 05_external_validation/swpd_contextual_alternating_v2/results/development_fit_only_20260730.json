@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "record_status": "frozen_development_fit_selection_test_unopened",
+  "created_date": "2026-07-30",
+  "dataset": "SingleWordProductionDutch",
+  "subject": "sub-01",
+  "scope": "development_only_not_confirmatory",
+  "repository_head_at_recording": "3b8f01e9611c8acaf810ad83ba0f69899c8dc90b",
+  "experiment": {
+    "name": "swpd_sub01_contextual_covariance_alternating_v2_fit_only",
+    "completed_utc": "2026-07-29T21:10:42.377708+00:00",
+    "run_contract_fingerprint": "1a0f2ed2ee636d2d1c3e2dc4dfa07514f4dcb55e96e9d4c2417b77106fbbd2f1",
+    "local_run_directory": "C:\\WhisperECoG_Work\\SWPD\\runs\\contextual_covariance_alternating_v2_sub01",
+    "test_evaluated": false,
+    "test_authorization_created": false,
+    "final_test_summary_created": false
+  },
+  "protocol": {
+    "base": "latest contextual L4 protocol sent to Ossadtchi",
+    "neural_input": "high-gamma context -200..+200 ms, 20 ms grid, 1143D",
+    "neural_transform": "fold-train StandardScaler then PCA50 whiten=false",
+    "target": "Whisper-base L4 raw512",
+    "target_search": "fold-train StandardScaler then whitened PCA128",
+    "projector": "row-orthonormal 128->50",
+    "decoder": "ordinary least squares",
+    "common_surface": "train-only affine score50->standardized MEL80",
+    "split": "five folds; test i, validation i+1 cyclic, remaining three train",
+    "inner_objective": "shared train MSE between OLS prediction and covariance-white projected L4",
+    "outer_selection": "validation mean Pearson r over common MEL80 all 80 bins",
+    "fixed_control": "cycle-zero exact L4 whitened PCA50 plus OLS",
+    "max_cycles": 10,
+    "search_dimension": 128,
+    "output_dimension": 50
+  },
+  "reference": {
+    "contextual_l4_common_mel80_r": 0.4936210266935884,
+    "reference_summary_sha256": "a6c41f7fe65605628adc575e3e02bea3f3db869caef1d89a1c11787ea6e39a2b"
+  },
+  "validation_fit_selection": {
+    "fixed_control_mean_r": 0.49409442901791545,
+    "selected_mean_r": 0.4960152246743861,
+    "selected_minus_fixed_mean_delta": 0.0019207956564705974,
+    "selected_cycles": [1, 0, 0, 0, 1],
+    "nonzero_cycle_selected_folds": 2,
+    "fold_count": 5,
+    "folds": [
+      {
+        "fold": 0,
+        "train_blocks": [2, 3, 4],
+        "validation_block": 1,
+        "role_excluded_test_block": 0,
+        "selected_cycle": 1,
+        "fixed_validation_r": 0.43499606083303205,
+        "selected_validation_r": 0.43625809404327776,
+        "delta": 0.0012620332102457055,
+        "selection_fingerprint": "062a45dea052998c94734b5c6e29cce8feaa95a98a46c0e2e6bd4c583005ad8b",
+        "selection_receipt_sha256": "317158c09d0780d67c83fd5023de9873795dea3a4e8cb7bfb79fd55c4e0d7156",
+        "selected_artifact_sha256": "ddf424f9f801286992892e3f5ccf7c802635933aa225e12e40b46ddcf072cb04",
+        "validation_predictions_sha256": "553e4d2742f105698070094432e069cfe7cc4d5961e73555612146f858a250fe"
+      },
+      {
+        "fold": 1,
+        "train_blocks": [0, 3, 4],
+        "validation_block": 2,
+        "role_excluded_test_block": 1,
+        "selected_cycle": 0,
+        "fixed_validation_r": 0.529921025751856,
+        "selected_validation_r": 0.529921025751856,
+        "delta": 0.0,
+        "selection_fingerprint": "ae7d759c22144409fc19406955d39e0e30a27344d9bd626386ef300a0b4b49ab",
+        "selection_receipt_sha256": "93976623ce589ad3790099422247410c70381b66d5009a8e6b452f2ccfd37ace",
+        "selected_artifact_sha256": "e6b2bd9aa137efcce1adaf6830afbed4106f4ed43b8668da57320f23db49cdd8",
+        "validation_predictions_sha256": "417cc962f3e3f9d7bd24f15b1787ad423d8876f92bea8d8d5b0b29f92a6769c8"
+      },
+      {
+        "fold": 2,
+        "train_blocks": [0, 1, 4],
+        "validation_block": 3,
+        "role_excluded_test_block": 2,
+        "selected_cycle": 0,
+        "fixed_validation_r": 0.48423152862973745,
+        "selected_validation_r": 0.48423152862973745,
+        "delta": 0.0,
+        "selection_fingerprint": "34310dd7fbbd3171cf1ef0026edbac2802dcaad97bec518dede040b233448512",
+        "selection_receipt_sha256": "72619183a0ad7af9b54da556a373af6ad4b774a3de1af860c62c2b86f86a1354",
+        "selected_artifact_sha256": "52f6e122ff6b0f1f0db8430de54e7485aade1e1b9aa81e0c758c2d697ab29431",
+        "validation_predictions_sha256": "fbab8e3e53d5e9d5b384a7032f63ce15e009b571bbf886189d9d111734c326e7"
+      },
+      {
+        "fold": 3,
+        "train_blocks": [0, 1, 2],
+        "validation_block": 4,
+        "role_excluded_test_block": 3,
+        "selected_cycle": 0,
+        "fixed_validation_r": 0.5789501037377895,
+        "selected_validation_r": 0.5789501037377895,
+        "delta": 0.0,
+        "selection_fingerprint": "de09772500d3b87fa07bc0a0697b102a1ce3c085bce080135c1cecd84b53613a",
+        "selection_receipt_sha256": "bf7c67793d196678a68b291b7ab807ee414cc38340795fa0ebca39e136fa6d9a",
+        "selected_artifact_sha256": "0c0d68a16f618e4085f0ccfd3cb5fffb64b47a196f36c418b15bc4e64837bb87",
+        "validation_predictions_sha256": "982660c62b3bd145d2d6ba740fa56e99f6d294585198a5d2dfa86273a96dd736"
+      },
+      {
+        "fold": 4,
+        "train_blocks": [1, 2, 3],
+        "validation_block": 0,
+        "role_excluded_test_block": 4,
+        "selected_cycle": 1,
+        "fixed_validation_r": 0.44237342613716246,
+        "selected_validation_r": 0.45071537120926974,
+        "delta": 0.008341945072107282,
+        "selection_fingerprint": "84a7f9bab258a8e6671eca6892738d845c97acc6f15027a1ed81a23bba2cfac2",
+        "selection_receipt_sha256": "d86225763742db1821f2e8a0cd47ece3235b05aa1b4c399668cb3e7b6e98a948",
+        "selected_artifact_sha256": "840105f980738fd8f1b14b8ccad6fb258b7d34b5cde43b73052326b398a6ccbb",
+        "validation_predictions_sha256": "7d202d9c9e968d4e067b81bc82ebcccf3e8bd1136c3272d3a715cb17018a2036"
+      }
+    ]
+  },
+  "integrity": {
+    "all_selection_receipts_frozen": true,
+    "all_selected_artifact_hashes_verified": true,
+    "all_validation_prediction_hashes_verified": true,
+    "all_fold_test_evaluated_flags_false": true,
+    "cycle_zero_max_abs_parity_error_max": 9.492406860545088e-15,
+    "projected_train_variance_range_all_cycles": [0.9999999999999908, 1.0000000000000089],
+    "projector_orthogonality_fro_error_max": 1.8560771329422e-14,
+    "whitening_fro_error_max": 5.180795350895081e-14,
+    "zero_variance_collapse_detected": false
+  },
+  "artifact_hashes": {
+    "fit_summary_sha256": "428375cda3b220402cce45ac9a9df1dd89f21868bbc96812462ff840adc4237a",
+    "run_contract_sha256": "f1eae95fe93a716b84c117b6b7f256755d4c3346ff6376bad4c73dc665340673"
+  },
+  "implementation_sha256": {
+    "core.py": "8dcd0c9a69261b6f73776632d2ffc63f213e4a3a6c69afdfc388fd3796fb1213",
+    "fit_select_sub01.py": "e4994ad038009e541d688382bd3c8cb90ccd7e40097afc6628e394a37fa864c5",
+    "evaluate_frozen_sub01.py": "07d68bdcf1603d5aec7502af21954bffaf96d574e41ec831a47c37eae760425b",
+    "preflight.py": "a60ee0d30e09ecde6d16bd5136dd8736bdcdb21c2b42977ef4e24dfa10858b8a",
+    "scripts/run_fit.ps1": "49fe9ad9c9bdefaecafe857f7df943bb4fa3471176f8294fcec4c2d6bedbdf08",
+    "scripts/start_fit_background.ps1": "4cc6e7a0d38ed1550eb684fa803942e70c9fc77d0c748d1b0cd27a68ea6414b0",
+    "scripts/watch_fit.ps1": "6988e2b129a718dc6a880ffd2a516bb3e32b5f35bdad9f0a8d90c7e68ab0350b",
+    "scripts/run_evaluate_frozen.ps1": "e2ed1a0273f9940b54176279a555bc8464ec81f55ae8d2cb30da08cedf3f7530"
+  },
+  "publication_boundary": {
+    "supported": "On development subject sub-01 validation blocks, fold-wise selection retained two nonzero alternating cycles and increased mean validation r by 0.001921 over its paired fixed PCA50 controls.",
+    "not_supported": "This fit-only record contains no held-out test result, no population inference and no deep end-to-end neural result."
+  },
+  "repository_payload_policy": {
+    "included": "compact aggregate validation metrics, protocol, fingerprints and SHA-256 receipts",
+    "excluded": "NPZ arrays, frame-level predictions, caches, recordings, logs and checkpoints"
+  }
+}

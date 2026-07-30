@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "kind": "swpd_contextual_fixed_q_neural_population_summary",
+  "completed_utc": "2026-07-30T09:10:39.042733+00:00",
+  "subjects": [
+    "sub-02",
+    "sub-03",
+    "sub-04",
+    "sub-05",
+    "sub-06",
+    "sub-07",
+    "sub-08",
+    "sub-09"
+  ],
+  "n_subjects": 8,
+  "test_item_count": 200,
+  "primary_metric": "subject-mean held-out Pearson correlation on common MEL80 surface",
+  "direct_mel80_control": {
+    "mean": 0.6918695462951309,
+    "ci95_t": [0.6005961234113685, 0.7831429691788933]
+  },
+  "linear_whisper_l4": {
+    "mean": 0.6928990720701741,
+    "ci95_t": [0.6019028216483262, 0.783895322492022]
+  },
+  "fixed_neural_whisper_l4": {
+    "mean": 0.7093457417447631,
+    "sd": 0.1017890187094929,
+    "sem": 0.03598785268990339,
+    "ci95_t": [0.6242479925114689, 0.7944434909780572]
+  },
+  "fixed_neural_minus_linear_l4": {
+    "mean": 0.016446669674588937,
+    "sd": 0.02254019073622178,
+    "sem": 0.00796916085941031,
+    "ci95_t": [-0.0023974013584166787, 0.03529074070759455],
+    "paired_t_p": 0.07792795988877027,
+    "exact_sign_p": 0.0703125,
+    "wins": 7,
+    "n": 8
+  },
+  "subject_rows": [
+    {"subject": "sub-02", "linear_l4_r": 0.6102330480756535, "fixed_neural_r": 0.6003154124430866},
+    {"subject": "sub-03", "linear_l4_r": 0.8142296308881780, "fixed_neural_r": 0.8142530696628436},
+    {"subject": "sub-04", "linear_l4_r": 0.7614783490213884, "fixed_neural_r": 0.7691184282110057},
+    {"subject": "sub-05", "linear_l4_r": 0.5237410719121247, "fixed_neural_r": 0.5532495498825173},
+    {"subject": "sub-06", "linear_l4_r": 0.8435715850604986, "fixed_neural_r": 0.8507332658931170},
+    {"subject": "sub-07", "linear_l4_r": 0.6695688376629594, "fixed_neural_r": 0.7186506939613886},
+    {"subject": "sub-08", "linear_l4_r": 0.6967266335783142, "fixed_neural_r": 0.6975594008087080},
+    {"subject": "sub-09", "linear_l4_r": 0.6236434203622763, "fixed_neural_r": 0.6708861130954377}
+  ]
+}
