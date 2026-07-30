@@ -53,7 +53,7 @@ ECoG-контекста до обучаемого 50-мерного Whisper-пр
 ## Запуск fit-only в фоне
 
 ```powershell
-Set-Location "C:\Users\Владимир\Documents\New project\ossadtchi-whisper-research-demo\05_external_validation\swpd_contextual_neural_e2e"
+Set-Location "<repo>\05_external_validation\swpd_contextual_neural_e2e"
 Set-ExecutionPolicy -Scope Process Bypass
 .\scripts\start_fit_background.ps1
 ```
