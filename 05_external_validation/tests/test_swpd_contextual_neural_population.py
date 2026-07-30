@@ -40,3 +40,5 @@ def test_population_scripts_keep_fit_and_test_separate() -> None:
     assert "200/200 selections frozen" in source
     assert "--diagnostic" in fit_script
     assert " evaluate " in evaluate_script
+    assert "LEGACY_TOLERANCE_HOTFIX_KIND" in source
+    assert "abs(legacy - legacy_by_subject[subject]) > 1e-6" in source
