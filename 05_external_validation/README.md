@@ -20,7 +20,7 @@ Ivanova/Procenko и не использующий их patient-specific веса
 | SWPD final | Frozen contextual MEL80 vs заранее выбранный Whisper L4/PCA50 на общей MEL80-поверхности | **Завершено: primary n=8** |
 | SWPD development | `sub-01`: PCA50 против sRRR50, CLIP50 и alternating50 | **Завершено: выбран L4/PCA50; альтернативы отклонены** |
 | SWPD neural follow-up | `sub-01`: paired fixed-PCA50 neural против neural alternating, 5 folds × 5 seeds | **Завершено: fixed neural 0,5456; alternating 0,5429** |
-| SWPD neural population | `sub-02…sub-09`: frozen fixed-Q neural, patient-level `n=8` | Код и gate готовы; fit/test запускаются раздельно |
+| SWPD neural population | `sub-02…sub-09`: frozen fixed-Q neural, patient-level `n=8` | **Завершено: r=0,70935; Δ к linear L4=+0,01645; 7/8 выигрышей** |
 | VocalMind | Повторяемое Mandarin word decoding на второй системе | Выполняется отдельно; результаты этого компьютера не подменяют внешний run |
 
 ## SWPD: финальный frozen contextual-результат
@@ -38,6 +38,18 @@ L4 превысил MEL80 у `6/8` пациентов. Предзаданный 
 осторожной интерпретации.
 
 Полный разбор: [swpd_contextual_frozen](swpd_contextual_frozen/README.md).
+
+## SWPD: последний fixed-neural результат
+
+![Авторские результаты SWPD и наша последняя модель](swpd_contextual_neural_population/figures/figure_01_authors_vs_latest.png)
+
+Fixed-neural Whisper L4 достиг `r=0,70935` на `sub-02…sub-09`, против `0,69290`
+у линейного Whisper L4 и `0,69187` у прямого MEL80-контроля. Парная прибавка к
+linear L4 составила `+0,01645`, но её 95% CI `[−0,00240; +0,03529]` пересекает
+ноль (`p=0,0779`). Приблизительное среднее авторских столбцов Figure 4a на общей
+группе равно `≈0,715`; это только визуальный ориентир из-за различий протокола.
+
+Полный разбор: [swpd_contextual_neural_population](swpd_contextual_neural_population/README.md).
 
 ## Scientific guardrails
 
