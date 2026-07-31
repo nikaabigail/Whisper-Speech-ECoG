@@ -9,6 +9,7 @@ Ivanova/Procenko и не использующий их patient-specific веса
 [SWPD linear alternating — сохранённый контроль](swpd_contextual_alternating_v2/results/README.md) ·
 [SWPD matched PCA50 — предварительный target-space анализ](swpd_matched_pca50/README.md) ·
 [SWPD setup](SWPD_README.md) ·
+[VocalMind: финальный OOF-результат](vocalmind_oof_results/README.md) ·
 [VocalMind runbook](VOCALMIND_PRIMARY_RUNBOOK.md) ·
 [Общий протокол](PROTOCOL_DRAFT.md) ·
 [Лабораторный журнал](LAB_JOURNAL.md)
@@ -21,7 +22,7 @@ Ivanova/Procenko и не использующий их patient-specific веса
 | SWPD development | `sub-01`: PCA50 против sRRR50, CLIP50 и alternating50 | **Завершено: выбран L4/PCA50; альтернативы отклонены** |
 | SWPD neural follow-up | `sub-01`: paired fixed-PCA50 neural против neural alternating, 5 folds × 5 seeds | **Завершено: fixed neural 0,5456; alternating 0,5429** |
 | SWPD neural population | `sub-02…sub-09`: frozen fixed-Q neural, patient-level `n=8` | **Завершено: r=0,70935; Δ к linear L4=+0,01645; 7/8 выигрышей** |
-| VocalMind | Повторяемое Mandarin word decoding на второй системе | Выполняется отдельно; результаты этого компьютера не подменяют внешний run |
+| VocalMind | Повторяемое 20-классовое Mandarin word decoding, 5 folds × 5 seeds | **Завершено: 100 OOF trials/seed, biological n=1** |
 
 ## SWPD: финальный frozen contextual-результат
 
@@ -50,6 +51,24 @@ linear L4 составила `+0,01645`, но её 95% CI `[−0,00240; +0,03529
 группе равно `≈0,715`; это только визуальный ориентир из-за различий протокола.
 
 Полный разбор: [swpd_contextual_neural_population](swpd_contextual_neural_population/README.md).
+
+## VocalMind: финальный OOF-результат
+
+![VocalMind OOF model comparison](vocalmind_oof_results/figures/figure_01_oof_model_comparison.png)
+
+| Система | Top-1 | Top-3 | Macro-F1 |
+|---|---:|---:|---:|
+| Whisper L3+L4+L5 | 6,0 ± 1,6% | **20,4 ± 3,8%** | 4,80 ± 2,29% |
+| MEL×3 | **7,0 ± 2,3%** | 19,4 ± 2,3% | **5,60 ± 1,86%** |
+
+Главная разность Whisper−MEL равна `−1,0` п.п. по Top-1 и `+1,0` п.п. по
+Top-3; оба описательных 95% t-интервала по пяти seeds включают ноль. Это
+нейтральный/отрицательный внешний результат без устойчивого преимущества
+Whisper. Статистический scope ограничен одним участником; seeds и folds не
+являются независимыми биологическими наблюдениями.
+
+Полный разбор и исходные артефакты:
+[vocalmind_oof_results](vocalmind_oof_results/README.md).
 
 ## Scientific guardrails
 

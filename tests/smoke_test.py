@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import ast
 import csv
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -59,6 +60,9 @@ ALLOWED_CURATED_TABLES = {
     "05_external_validation/swpd_matched_pca50/table_03_patient_level_metrics.csv",
     "05_external_validation/swpd_contextual_frozen/results/frozen_subject_metrics.csv",
     "05_external_validation/swpd_contextual_neural_population/results/authors_figure4a_digitized.csv",
+    "05_external_validation/vocalmind_oof_results/results/model_summary.csv",
+    "05_external_validation/vocalmind_oof_results/results/primary_contrast_by_seed.csv",
+    "05_external_validation/vocalmind_oof_results/results/vocalmind_oof_metrics.csv",
     "results/async/paper_style_async_pr_multiseed.csv",
     "results/reported_metrics.csv",
 }
@@ -212,6 +216,74 @@ def check_figures() -> None:
         width, height = png_dimensions(path)
         if width < 1000 or height < 600:
             raise AssertionError(f"Figure is too small for publication preview: {rel_path} ({width}x{height})")
+
+
+def file_sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def check_vocalmind_oof_release() -> None:
+    root = ROOT / "05_external_validation" / "vocalmind_oof_results"
+    results = root / "results"
+    figures = root / "figures"
+    csv_path = results / "vocalmind_oof_metrics.csv"
+    json_path = results / "vocalmind_oof_summary.json"
+    expected_csv = "e1caa36898f694023e1cc7ae67007a549d06ec08e6d73ad274b0b822ea2c143f"
+    expected_json = "988988d5b926e6a3b7987a4dc7ec6dad6edd94f8f9baa66b88f0486cf81a4afa"
+    if file_sha256(csv_path) != expected_csv or file_sha256(json_path) != expected_json:
+        raise AssertionError("VocalMind immutable OOF source checksum mismatch")
+
+    payload = json.loads(json_path.read_text(encoding="utf-8"))
+    if payload["metrics_csv_sha256"] != expected_csv:
+        raise AssertionError("VocalMind JSON does not authenticate its metrics CSV")
+    if payload["statistical_scope"]["participant_count"] != 1:
+        raise AssertionError("VocalMind biological scope must remain n=1")
+    if payload["statistical_scope"]["biological_inference"]:
+        raise AssertionError("VocalMind release must not claim biological inference")
+
+    with csv_path.open(encoding="utf-8", newline="") as stream:
+        rows = list(csv.DictReader(stream))
+    summary = {
+        (row["model"], row["metric"]): float(row["mean"])
+        for row in rows
+        if row["row_type"] == "descriptive_seed_summary"
+    }
+    contrast = {
+        row["metric"]: float(row["mean"])
+        for row in rows
+        if row["row_type"] == "descriptive_seed_primary_contrast"
+    }
+    expected = {
+        ("L345", "accuracy"): 0.06,
+        ("L345", "top3_accuracy"): 0.204,
+        ("MELx3", "accuracy"): 0.07,
+        ("MELx3", "top3_accuracy"): 0.194,
+    }
+    for key, value in expected.items():
+        if abs(summary[key] - value) > 1e-12:
+            raise AssertionError(f"Unexpected VocalMind summary value for {key}")
+    if abs(contrast["accuracy"] + 0.01) > 1e-12:
+        raise AssertionError("Unexpected VocalMind Top-1 primary contrast")
+    if abs(contrast["top3_accuracy"] - 0.01) > 1e-12:
+        raise AssertionError("Unexpected VocalMind Top-3 primary contrast")
+
+    manifest = json.loads((figures / "figure_manifest.json").read_text(encoding="utf-8"))
+    if manifest["source_artifacts"]["results/vocalmind_oof_metrics.csv"] != expected_csv:
+        raise AssertionError("VocalMind figure manifest points to the wrong metrics source")
+    if manifest["source_artifacts"]["results/vocalmind_oof_summary.json"] != expected_json:
+        raise AssertionError("VocalMind figure manifest points to the wrong OOF source")
+    for stem in ("figure_01_oof_model_comparison", "figure_02_primary_contrast"):
+        png = figures / f"{stem}.png"
+        svg = figures / f"{stem}.svg"
+        if not png.is_file() or png.stat().st_size < 10_000 or not svg.is_file():
+            raise AssertionError(f"Missing VocalMind publication figure: {stem}")
+        width, height = png_dimensions(png)
+        if width < 1000 or height < 600:
+            raise AssertionError(f"VocalMind figure is too small: {stem} ({width}x{height})")
 
 
 def check_no_private_paths_or_secrets() -> None:
@@ -386,6 +458,7 @@ def main() -> int:
         ("Python AST", check_python_syntax),
         ("reported metrics", check_metrics),
         ("PNG figures", check_figures),
+        ("VocalMind immutable OOF results", check_vocalmind_oof_release),
         ("Markdown links", check_markdown_links),
         ("private paths and secrets", check_no_private_paths_or_secrets),
         ("large/private payloads", check_repository_payload),

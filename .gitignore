@@ -70,6 +70,7 @@ datasets/
 # contain no raw recordings or participant metadata beyond public subject IDs.
 !05_external_validation/swpd_matched_pca50/table_*.csv
 !05_external_validation/swpd_contextual_frozen/results/*.csv
+!05_external_validation/vocalmind_oof_results/results/*.csv
 
 # Local Podcast result record belongs to its separate repository/package and is
 # intentionally not part of the SWPD publication update.

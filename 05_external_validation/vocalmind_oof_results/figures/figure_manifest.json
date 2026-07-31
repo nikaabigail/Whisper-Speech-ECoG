@@ -1,0 +1,28 @@
+{
+  "artifacts": {
+    "figures/figure_01_oof_model_comparison.png": "08d079ea361b95fd15f2e85204a26aa7d7399ec722de20d41b7e38e80dc52ee6",
+    "figures/figure_01_oof_model_comparison.svg": "77f7376edb02a884f4804deb55605ad786b1474c8ca8b74e667e703415a2c0df",
+    "figures/figure_02_primary_contrast.png": "75235f3241d39cf7a19969951b8bcb783bc276615270332c5e34a554b19c3782",
+    "figures/figure_02_primary_contrast.svg": "a22add3223496d3cbe1fbcb755771601af7f179d49993f71c38272401feb6cba",
+    "results/model_summary.csv": "e253a7ef879f429f8217e15f8f5763e2a5c4d90d60d7d372e11e641bd7093f53",
+    "results/primary_contrast_by_seed.csv": "c1222f7f77e50dececcd8591ea5bab4ef1ea0383613a6cc947d98be98eade4a7"
+  },
+  "immutable_oof_fingerprint": "c638c98a405bed7df59116c0805d2534cca2bfca8cfbfe8c29eaf7825e5960c7",
+  "schema_version": 1,
+  "source_artifacts": {
+    "results/vocalmind_oof_metrics.csv": "e1caa36898f694023e1cc7ae67007a549d06ec08e6d73ad274b0b822ea2c143f",
+    "results/vocalmind_oof_summary.json": "988988d5b926e6a3b7987a4dc7ec6dad6edd94f8f9baa66b88f0486cf81a4afa"
+  },
+  "source_run_fingerprint": "b0ffb3306022158ad74975b8090333352894892cd904b524ec51c96158cb3980",
+  "statistical_scope": {
+    "biological_n": 1,
+    "seed_intervals_are_population_intervals": false,
+    "training_seeds": [
+      1,
+      2,
+      3,
+      4,
+      42
+    ]
+  }
+}

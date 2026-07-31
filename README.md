@@ -16,6 +16,7 @@
 [Архитектура](docs/ARCHITECTURE.md) ·
 [Внешняя валидация](05_external_validation/README.md) ·
 [SWPD: финальный frozen contextual](05_external_validation/swpd_contextual_frozen/README.md) ·
+[VocalMind: финальный OOF](05_external_validation/vocalmind_oof_results/README.md) ·
 [Происхождение](docs/PROVENANCE.md) ·
 [Чек-лист публикации](docs/PUBLISHING_CHECKLIST.md)
 
@@ -34,6 +35,7 @@
 | 5b. SWPD preliminary PCA50 | Предшествующий анализ предсказуемости 50 target-компонент L3/L4/L5 | [Отдельный протокол и аудит](05_external_validation/swpd_matched_pca50/README.md) |
 | 5c. SWPD neural end-to-end | Development follow-up: парный fixed-PCA50 neural-контроль против constrained alternating, 5 folds × 5 seeds | [Код и безопасный двухступенчатый запуск](05_external_validation/swpd_contextual_neural_e2e/README.md) |
 | 5d. SWPD neural population | Frozen fixed-Q neural follow-up на `sub-02…sub-09`, 5 folds × 5 seeds | [Population fit и patient-level evaluation](05_external_validation/swpd_contextual_neural_population/README.md) |
+| 5e. VocalMind OOF | Frozen 20-классовое сравнение Whisper L3/L4/L5/L345 с compute-matched MEL×3, 5 folds × 5 seeds | [Метрики, графики и immutable OOF-артефакты](05_external_validation/vocalmind_oof_results/README.md) |
 | Результаты | Таблицы, определения метрик и графики | [results](results/README.md) |
 | Веса | Ожидаемая структура и правила целостности | [checkpoints](checkpoints/README.md) |
 
@@ -119,6 +121,30 @@ L4 выиграл у `6/8` пациентов: paired `t p=0,046`, exact sign `p
 [SWPD contextual frozen](05_external_validation/swpd_contextual_frozen/README.md).
 Предыдущий анализ корреляций 50 PCA-компонент сохранён отдельно и не смешивается
 с этой общей MEL80-метрикой.
+
+### Внешняя валидация VocalMind
+
+На одном участнике VocalMind завершён заранее зафиксированный 20-классовый OOF-
+прогон: пять repetition-folds × пять training seeds, 100 уникальных held-out
+trials на seed. Главный контраст сравнивает одинаковое усреднение softmax для
+Whisper `L3+L4+L5` и трёх MEL-инициализаций.
+
+| Система | Top-1 | Top-3 | Macro-F1 |
+|---|---:|---:|---:|
+| Whisper L3+L4+L5 | 6,0 ± 1,6% | **20,4 ± 3,8%** | 4,80 ± 2,29% |
+| MEL×3 | **7,0 ± 2,3%** | 19,4 ± 2,3% | **5,60 ± 1,86%** |
+| Δ Whisper−MEL | −1,0 п.п. | +1,0 п.п. | −0,81 п.п. |
+
+Устойчивого преимущества Whisper над MEL не обнаружено: описательные интервалы
+всех трёх разностей включают ноль. Пять seeds — не пять участников;
+`biological n=1`, поэтому популяционный вывод невозможен. Опубликованный
+VocalMind baseline использует акустические regression-метрики, а не Top-1/Top-3,
+и напрямую с этой таблицей не сравнивается.
+
+![VocalMind OOF](05_external_validation/vocalmind_oof_results/figures/figure_01_oof_model_comparison.png)
+
+Полный разбор, исходные immutable JSON/CSV, контрольные суммы и SVG находятся в
+[разделе VocalMind OOF](05_external_validation/vocalmind_oof_results/README.md).
 
 ## Что именно находится в репозитории
 

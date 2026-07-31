@@ -412,3 +412,29 @@ same config/commit; it is not a separate pilot.
   Verwoert et al. (2022). Их среднее для общей группы `sub-02…sub-09` равно
   `≈0,715`, наше — `0,709`. Это визуальный ориентир, а не прямой тест, поскольку
   опубликованный протокол использует MEL23/10-fold, а наш — MEL80/strict block5.
+
+## 2026-07-31 — VocalMind frozen OOF завершён
+
+- На отдельной системе завершены все пять repetition-folds × пять training
+  seeds (`1,2,3,4,42`); все test-gates открыты только после фиксации моделей.
+- Immutable OOF-агрегатор проверил 25 seed/fold prediction artifacts и собрал
+  по 100 уникальных held-out trials на seed, сбалансированных по 20 словам.
+- Whisper L3+L4+L5: Top-1 `0,060`, Top-3 `0,204`, Macro-F1 `0,04795`.
+  Compute-matched MEL×3: Top-1 `0,070`, Top-3 `0,194`, Macro-F1 `0,05602`.
+- Основной парный контраст L345−MEL×3: Top-1 `−0,010`, 95% descriptive
+  seed t-CI `[−0,05646; +0,03646]`; Top-3 `+0,010`, CI
+  `[−0,05083; +0,07083]`; Macro-F1 `−0,00807`, CI
+  `[−0,05546; +0,03931]`.
+- Вывод зафиксирован как отсутствие устойчивого преимущества Whisper над MEL,
+  а не как доказанное ухудшение: знак разности зависит от training seed.
+- `biological n=1`; seeds и folds не трактуются как независимые участники, а
+  seed-интервалы не являются population confidence intervals.
+- Опубликованный baseline VocalMind оценивает акустическую реконструкцию через
+  MCD/PCC/DTW PCC/pitch. Наш closed-set Top-1/Top-3 результат нельзя напрямую
+  сравнивать с авторскими числами.
+- Source run summary SHA-256:
+  `8e4215ad2d5c15f9a004fb02d105d2715cf01d0ff38526a9a252c0e97b9acd17`.
+- Immutable OOF JSON SHA-256:
+  `988988d5b926e6a3b7987a4dc7ec6dad6edd94f8f9baa66b88f0486cf81a4afa`;
+  metrics CSV SHA-256:
+  `e1caa36898f694023e1cc7ae67007a549d06ec08e6d73ad274b0b822ea2c143f`.
